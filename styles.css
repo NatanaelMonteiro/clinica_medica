@@ -1,0 +1,90 @@
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+  :root {
+    --bg-color: #d9d9d9;
+    --primary: #c3ffb4;
+    --secondary: #959595;
+    --font-primary: #7d7d7d;
+    --font-secondary: #dadada;
+  }
+
+  * {
+    font-family: "Poppins";
+    border-radius: 7px;
+    border: solid 0px transparent;
+  }
+
+  body {
+    background-color: var(--bg-color);
+  }
+
+  input {
+    height: 2em;
+    margin-bottom: 15px;
+    padding-left: 10px;
+}
+
+button {
+    height: 3em;
+    margin-bottom: 10px;
+    background-color: var(--primary);
+    font-weight: 600;
+    font-size: 1.05em;
+    color: var(--font-primary);
+}
+
+.secondary {
+    height: 1.9em;
+    width: 15em;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--font-secondary);
+    background-color: var(--secondary);
+}
+
+  div.buttons {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  div.icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 7rem;
+    color: var(--secondary);
+  }
+
+  .conteiner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 80vh;
+    width: 90%;
+    margin: auto;
+  }
+
+    @media (min-width: 600px) {
+      .conteiner {
+        width: 60%;
+      }
+    }
+
+    @media (min-width: 762px) {
+      .conteiner {
+        width: 50%;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .conteiner {
+        width: 40%;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .conteiner {
+        width: 30%;
+      }
+    }
