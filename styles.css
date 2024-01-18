@@ -33,11 +33,16 @@ button {
     color: var(--font-primary);
 }
 
+button a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .secondary {
     height: 1.9em;
-    width: 15em;
+    width: 13em;
     font-size: 0.75em;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--font-secondary);
     background-color: var(--secondary);
 }
@@ -55,9 +60,9 @@ button {
     color: var(--secondary);
   }
 
-  .conteiner {
+  .container {
     display: flex;
-    flex-direction: column;
+    /*flex-direction: column;*/
     justify-content: center;
     box-sizing: border-box;
     height: 80vh;
@@ -65,26 +70,47 @@ button {
     margin: auto;
   }
 
+  .login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .boxes {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .optionbox {
+    height: 20vh;
+    width: 20vw;
+    background-color: var(--primary);
+  }
+
+
     @media (min-width: 600px) {
-      .conteiner {
+      .login {
         width: 60%;
       }
     }
 
     @media (min-width: 762px) {
-      .conteiner {
+      .login {
         width: 50%;
       }
     }
 
     @media (min-width: 992px) {
-      .conteiner {
+      .login {
         width: 40%;
       }
     }
 
     @media (min-width: 1200px) {
-      .conteiner {
+      .login {
         width: 30%;
       }
     }
