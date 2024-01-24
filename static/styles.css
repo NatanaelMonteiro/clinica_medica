@@ -33,7 +33,7 @@ button {
     color: var(--font-primary);
 }
 
-button a {
+a button {
   color: inherit;
   text-decoration: none;
 }
