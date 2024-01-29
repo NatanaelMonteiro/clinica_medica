@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./styles.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
     <title>Clínica Médica - Médicos</title>
 </head>
 <body>
@@ -12,7 +13,25 @@
         <div class="content">
             <h1>Clínica Médica - Médicos</h1>
 
-            <table>
+            <div class="cards">
+                <h1>Lista de Médicos</h1>
+                
+                <div hx-get="/api/medicos" hx-trigger="load" hx-swap="innerHTML" hx-target="#medicos">
+                    Chamada da API
+                </div>
+                
+                <div id="medicos">Dados vão ser exibidos aqui</div>
+
+                <div hx-get="/api/medicos" hx-trigger="load delay:2s" hx-swap="innerHTML" hx-target="this">
+                    Chamada da API - Dados vão ser exibidos aqui
+                </div>
+
+                <div hx-get="/api/medicos" hx-trigger="load delay:4s" hx-swap="innerHTML">
+                    Chamada da API - Dados vão ser exibidos aqui
+                </div>
+                
+            </div>
+            <!-- <table>
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -113,7 +132,7 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
 
         </div>
     </div>
