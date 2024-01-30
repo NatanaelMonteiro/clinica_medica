@@ -17,12 +17,18 @@ async def root():
 async def api():
     return "/app/login.html"
 
+@app.get("/api/pacientes")
+async def pacientes():
+    return get_pacientes()
+
 
 @app.get("/api/medicos", response_class=HTMLResponse)
 async def medicos(request: Request):
     medicos = get_medicos()
-    dados_html= templates.TemplateResponse("tpl_medicos.html", {"request": request, "dados": medicos})
-                                           
+    dados_html = templates.TemplateResponse(
+        "tpl_medicos.html", {"request": request, "dados": medicos}
+    )
+
     return dados_html
 
 
@@ -60,6 +66,7 @@ async def medicos(request: Request):
 
 #     return dados_html
 
+
 def get_medicos():
     dados = [
         {
@@ -75,6 +82,23 @@ def get_medicos():
             "especialidade": "Radiologia",
             "turno": "Vespertino",
             "situação": "Ativo",
+        },
+    ]
+
+    return dados
+
+
+def get_pacientes():
+    dados = [
+        {
+            "nome": "Natanael Lima",
+            "email": "natan@gmail.com",
+            "situação": "internado",
+        },
+        {
+            "nome": "Luciana Lima",
+            "email": "lulu@gmail.com",
+            "situação": "em atendimento",
         },
     ]
 
