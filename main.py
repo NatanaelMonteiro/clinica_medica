@@ -1,12 +1,9 @@
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
-from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 app.mount("/app", StaticFiles(directory="static", html="true"), name="static")
-templates = Jinja2Templates(directory="templates")
-
 
 @app.get("/", response_class=RedirectResponse)
 async def root():
@@ -93,11 +90,13 @@ def get_pacientes():
         {
             "nome": "Natanael Lima",
             "email": "natan@gmail.com",
+            "telefone": "61 9999-0000",
             "situação": "internado",
         },
         {
             "nome": "Luciana Lima",
             "email": "lulu@gmail.com",
+            "telefone": "61 9999-2222",
             "situação": "em atendimento",
         },
     ]
