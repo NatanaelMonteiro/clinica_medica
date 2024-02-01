@@ -150,6 +150,11 @@ text-transform: lowercase;
     cursor: pointer;
   }
 
+  tr.htmx-swapping td {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
