@@ -146,6 +146,10 @@ text-transform: lowercase;
     color: var(--secondary);
   }
 
+  td.icon {
+    cursor: pointer;
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
@@ -167,11 +171,11 @@ text-transform: lowercase;
     border-bottom: 2px solid var(--secondary);
   }
 
-  td.email {
+  /* td.email {
     text-transform: lowercase !important;
     text-decoration: underline !important;
     color: red !important;
-  }
+  } */
 
   td.flcase::first-letter {
     text-transform: uppercase;

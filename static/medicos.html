@@ -1,140 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./styles.css">
-    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+        crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
+    <script src="https://unpkg.com/mustache@latest"></script>
+
     <title>Clínica Médica - Médicos</title>
 </head>
+
 <body>
     <div class="container">
         <div class="content">
-            <h1>Clínica Médica - Médicos</h1>
+            <h1>Clínica Médica - Cadastro de Médicos</h1>
 
-            <div class="cards">
-                <h1>Lista de Médicos</h1>
-                
-                <div hx-get="/api/medicos" hx-trigger="load" hx-swap="innerHTML" hx-target="#medicos">
-                    Chamada da API
-                </div>
-                
-                <div id="medicos">Dados vão ser exibidos aqui</div>
-
-                <!-- <div hx-get="/api/medicos" hx-trigger="load delay:2s" hx-swap="innerHTML" hx-target="this">
-                    Chamada da API - Dados vão ser exibidos aqui
+            <div class="dados" hx-ext="client-side-templates">
+                <div class="w-100" hx-get="/api/medicos" hx-trigger="load" hx-swap="innerHTML"
+                    mustache-array-template="medico">
                 </div>
 
-                <div hx-get="/api/medicos" hx-trigger="load delay:4s" hx-swap="innerHTML">
-                    Chamada da API - Dados vão ser exibidos aqui
-                </div> -->
-                
+                <template id="medico">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>CRM</th>
+                                <th>Especialidade</th>
+                                <th>Turno</th>
+                                <th>Situação</th>
+                                <th colspan="2">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- {{#data}} -->
+                            <tr>
+                                <td class="u-case">{{nome}}</td>
+                                <td>{{crm}}</td>
+                                <td class="fl-case">{{especialidade}}</td>
+                                <td class="l-case">{{turno}}</td>
+                                <td class="u-case">{{situação}}</td>
+                                 <td class="icon">
+                                    <i class="fa fa-pencil"></i>
+                                </td>
+                                <td class="icon">
+                                    <a hx-delete="/api/medicos/1">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- {{/data}} -->
+                        </tbody>
+                    </table>
+                </template>
+
             </div>
-            <!-- <table>
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>RCM</th>
-                        <th>Especialidade</th>
-                        <th>Turno</th>
-                        <th>Situação</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Rancho Crux</td>
-                        <td>0001</td>
-                        <td>Traumatologia</td>
-                        <td>Noturno</td>
-                        <td>Ativo</td>
-                        <td>
-                            <i class="fa fa-pencil"></i>&nbsp;
-                            <i class="fa fa-trash-o"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Álvaro Cortez</td>
-                        <td>0002</td>
-                        <td>Radiologia</td>
-                        <td>Vespertino</td>
-                        <td>Ativo</td>
-                        <td>
-                            <i class="fa fa-pencil"></i>&nbsp;
-                            <i class="fa fa-trash-o"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Ernesto Valber</td>
-                        <td>0003</td>
-                        <td>Oftalmologia</td>
-                        <td>Diurno</td>
-                        <td>Licença</td>
-                        <td>
-                            <i class="fa fa-pencil"></i>&nbsp;
-                            <i class="fa fa-trash-o"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Jurandir Guedes</td>
-                        <td>0004</td>
-                        <td>Cardiologia</td>
-                        <td>Noturno</td>
-                        <td>Inativo</td>
-                        <td>
-                            <i class="fa fa-pencil"></i>&nbsp;
-                            <i class="fa fa-trash-o"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Siqueira</td>
-                        <td>0005</td>
-                        <td>Urologia</td>
-                        <td>Diurno</td>
-                        <td>Licença</td>
-                        <td>
-                            <i class="fa fa-pencil"></i>&nbsp;
-                            <i class="fa fa-trash-o"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Camila Abreu</td>
-                        <td>0006</td>
-                        <td>Neurologia</td>
-                        <td>Noturno</td>
-                        <td>Ativo</td>
-                        <td>
-                            <i class="fa fa-pencil"></i>&nbsp;
-                            <i class="fa fa-trash-o"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Jennifer Dantas</td>
-                        <td>0007</td>
-                        <td>Ginecologia</td>
-                        <td>Vespertino</td>
-                        <td>Ativo</td>
-                        <td>
-                            <i class="fa fa-pencil"></i>&nbsp;
-                            <i class="fa fa-trash-o"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Roberta COligguera</td>
-                        <td>0007</td>
-                        <td>Pediatria</td>
-                        <td>Vespertino</td>
-                        <td>Inativo</td>
-                        <td>
-                            <i class="fa fa-pencil"></i>&nbsp;
-                            <i class="fa fa-trash-o"></i>
-                        </td>
-                    </tr>
-                </tbody>
-            </table> -->
 
         </div>
     </div>
+    </div>
 </body>
+
 </html>

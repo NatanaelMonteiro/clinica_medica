@@ -5,6 +5,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 app = FastAPI()
 app.mount("/app", StaticFiles(directory="static", html="true"), name="static")
 
+
 @app.get("/", response_class=RedirectResponse)
 async def root():
     return "/app/login.html"
@@ -14,19 +15,16 @@ async def root():
 async def api():
     return "/app/login.html"
 
+
 @app.get("/api/pacientes")
 async def pacientes():
     return get_pacientes()
 
 
-@app.get("/api/medicos", response_class=HTMLResponse)
+@app.get("/api/medicos")
 async def medicos(request: Request):
     medicos = get_medicos()
-    dados_html = templates.TemplateResponse(
-        "tpl_medicos.html", {"request": request, "dados": medicos}
-    )
-
-    return dados_html
+    return medicos
 
 
 # @app.get("/api/medicos", response_class=HTMLResponse)
