@@ -9,7 +9,7 @@
   }
 
   * {
-    font-family: "Poppins";
+    font-family: "Poppins", "Noto Sans", sans-serif;
     border-radius: 7px;
     border: solid 0px transparent;
     box-sizing: border-box;
@@ -59,10 +59,10 @@ text-transform: lowercase;
   }
 
   .secondary {
-    height: 1.9em;
+    /* height: 1.9em;
     width: 13em;
     font-size: 0.75em;
-    font-weight: 500;
+    font-weight: 500; */
     color: var(--font-secondary);
     background-color: var(--secondary);
   }
@@ -113,24 +113,38 @@ text-transform: lowercase;
     padding-left: 10px;
   }
 
-  div.button {
+  button,
+  .button {
     height: 3em;
     width: 100%;
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     justify-content: center;
-    align-content: center;
+    align-content: center; */
     margin-bottom: 10px;
     background-color: var(--primary);
     font-weight: 600;
     font-size: 1.05em;
+    text-align: center;
     color: var(--font-primary);
   }
 
-  div.button a {
-    color: inherit;
-    text-align: center;
+  a.button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-decoration: none;
+  }
+
+  button:hover, a.button:hover, .card:hover {
+    box-shadow: 8px 8px 12px rgba(128, 128, 128, 0.4) !important;
+  }
+  
+  button.mini {
+    height: 1.9em;
+    width: 12em;
+    font-size: 0.75em;
+    font-weight: 500;
   }
 
   div.buttons {
