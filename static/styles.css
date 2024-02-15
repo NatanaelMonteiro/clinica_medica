@@ -1,15 +1,18 @@
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
   :root {
     --bg-color: #d9d9d9;
     --primary: #c3ffb4;
     --secondary: #959595;
+    --soft-color: #afafaf;
     --font-primary: #7d7d7d;
     --font-secondary: #dadada;
+    --warning: #b4293e;
   }
 
   * {
     font-family: "Poppins", "Noto Sans", sans-serif;
+    color: var(--font-primary);
     border-radius: 7px;
     border: solid 0px transparent;
     box-sizing: border-box;
@@ -18,18 +21,6 @@
   body {
     background-color: var(--bg-color);
   }
-
-  .w-100 {
-    width: 100%;
-  }
-
-  .u-case {
-    text-transform: uppercase;
-  }
-
-.l-case {
-text-transform: lowercase;
-}
 
   .container {
     display: flex;
@@ -66,6 +57,43 @@ text-transform: lowercase;
     color: var(--font-secondary);
     background-color: var(--secondary);
   }
+
+  /* swal CSS */
+
+  .swal2-actions {
+    flex-wrap: nowrap !important;
+    margin: 0 !important;
+    padding: 2em !important;
+    gap: 20px;
+  }
+
+  .swal2-actions button:focus {
+    outline: none;
+  }
+
+  button.swal2-cancel {
+    color: var(--font-secondary);
+    background-color: var(--secondary);
+  }
+
+  /* fim swal */
+
+  .warning {
+    color: var(--warning);
+    font-weight: 400;
+  }
+
+  .w-100 {
+    width: 100%;
+  }
+
+  .u-case {
+    text-transform: uppercase;
+  }
+
+.l-case {
+text-transform: lowercase;
+}
 
   .cards,
   .dados,
@@ -108,9 +136,12 @@ text-transform: lowercase;
   }
 
   input {
-    height: 2em;
+    height: 2.5em;
     margin-bottom: 15px;
     padding-left: 10px;
+  }
+  input:focus-visible {
+    outline: var(--soft-color) solid 2px;
   }
 
   button,
@@ -136,8 +167,8 @@ text-transform: lowercase;
     text-decoration: none;
   }
 
-  button:hover, a.button:hover, .card:hover {
-    box-shadow: 8px 8px 12px rgba(128, 128, 128, 0.4) !important;
+  input:hover, button:hover, a.button:hover, .card:hover {
+    box-shadow: 4px 4px 10px rgba(128, 128, 128, 0.4) !important;
   }
   
   button.mini {
@@ -166,7 +197,7 @@ text-transform: lowercase;
 
   tr.htmx-swapping td {
     opacity: 0;
-    transition: opacity 1s ease-out;
+    transition: opacity 0.2s ease-out;
   }
 
   table {
