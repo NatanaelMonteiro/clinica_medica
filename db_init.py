@@ -12,10 +12,18 @@ def tbl_create():
     con = sqlite3.connect("clinica.db")
     cur = con.cursor()
 
+    try:
+        cur.execute("DROP TABLE medicos")
+        cur.execute("DROP TABLE pacientes")
+    except:
+        pass
+
+
     cur.execute(
         """
             CREATE TABLE IF NOT EXISTS medicos
-            (nome text,
+            (id integer PRIMARY KEY AUTOINCREMENT,
+            nome text,
             crm text,
             especialidade text,
             turno text,
@@ -26,7 +34,8 @@ def tbl_create():
     cur.execute(
         """
             CREATE TABLE IF NOT EXISTS pacientes
-            (nome text,
+            (id integer PRIMARY KEY AUTOINCREMENT,
+            nome text,
             email text,
             telefone text,
             status text) 
@@ -59,21 +68,21 @@ def tables_init():
     # )
 
     medicos = [
-        ("Rancho Crux", "0001", "Traumatologia", "Noturno", "Ativo"),
-        ("Frederico Evandro", "1111", "Urologia", "Noturno", "Recesso"),
-        ("Ernesto Ataronte", "2222", "Oftamologia", "Diurno", "Aposentado"),
+        (None, "Rancho Crux", "0001", "Traumatologia", "Noturno", "Ativo"),
+        (None, "Frederico Evandro", "1111", "Urologia", "Noturno", "Recesso"),
+        (None, "Ernesto Ataronte", "2222", "Oftamologia", "Diurno", "Aposentado"),
     ]
 
     pacientes = [
-        ("Natanael Lima", "natan@gmail.com", "61 9999-0000", "Internado"),
-        ("Luciana Lima", "lulu@gmail.com", "61 9999-2222", "Em atendimento"),
+        (None, "Natanael Lima", "natan@gmail.com", "61 9999-0000", "Internado"),
+        (None, "Luciana Lima", "lulu@gmail.com", "61 9999-2222", "Em atendimento"),
     ]
 
     cur.execute("DELETE FROM medicos")
     cur.execute("DELETE FROM pacientes")
 
-    cur.executemany("INSERT INTO medicos VALUES (?,?,?,?,?)", medicos)
-    cur.executemany("INSERT INTO pacientes VALUES (?,?,?,?)", pacientes)
+    cur.executemany("INSERT INTO medicos VALUES (?,?,?,?,?,?)", medicos)
+    cur.executemany("INSERT INTO pacientes VALUES (?,?,?,?,?)", pacientes)
     
 
     con.commit()
