@@ -19,3 +19,13 @@ document.addEventListener(
         }
     }
 )
+
+function onClick(obj) {
+    let editing = document.querySelector('.editing');
+
+    if (editing) {
+        htmx.trigger(editing, 'cancel')
+    } else {
+        htmx.trigger(obj, 'edit')
+    }
+}
