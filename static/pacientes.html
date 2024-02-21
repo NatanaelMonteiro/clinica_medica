@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -13,9 +13,13 @@
 
 <body>
     <div class="container">
-        <div class="content">
-            <h1>Clínica Médica: Pacientes</h1>
 
+        <div class="titles">
+            <h1>Clínica Médica</h1>
+            <h2>Cadastrado de Pacientes</h2>
+        </div>
+
+        <div class="content">
             <div class="dados" hx-ext="client-side-templates">
                 <div class="w-100" hx-get="/api/pacientes" hx-trigger="load delay:0.5s" hx-swap="innerHTML"
                     mustache-array-template="template">
@@ -36,28 +40,28 @@
                             <!-- {{#data}} -->
                             <tr>
                                 <td class="u-case">{{nome}}</td>
-                                <td class="l-case">{{email}}</td>
-                                <td>{{telefone}}</td>
-                                <td class="fl-case">{{status}}</td>
+                                <td data-th="E-mail"><span class="l-case">{{email}}</span></td>
+                                <td data-th="Telefone">{{telefone}}</td>
+                                <td data-th="Status" class="fl-case">{{status}}</td>
                                 <td class="icon">
-                                    <a hx-target="closest tr" hx-get="/api/pacientes/{{id}}/edit" hx-trigger="click"
-                                        hx-swap="outerHTML swap:0.5s">
-                                        <!-- <i class="fa fa-pencil"></i> -->
-                                        <i class="material-symbols-outlined">edit</i>
-                                    </a>
-                                </td>
-                                <td class="icon">
-                                    <a hx-confirm="{{nome}}?" hx-delete="/api/pacientes/{{id}}">
-                                        <!-- <i class="fa fa-trash-o"></i> -->
-                                        <i class="material-symbols-outlined">delete</i>
-                                    </a>
+                                    <div>
+                                        <a hx-target="closest tr" hx-get="/api/pacientes/{{id}}/edit" hx-trigger="click"
+                                            hx-swap="outerHTML swap:0.5s">
+                                            <!-- <i class="fa fa-pencil"></i> -->
+                                            <i class="material-symbols-outlined">edit</i>
+                                        </a>
+                                        <a hx-confirm="{{nome}}?" hx-delete="/api/pacientes/{{id}}">
+                                            <!-- <i class="fa fa-trash-o"></i> -->
+                                            <i class="material-symbols-outlined">delete</i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                             <!-- {{/data}} -->
 
                             <!-- {{^data}} -->
                             <tr>
-                                <td class="warning" colspan="8">Não existem pacientes cadastrados.</td>
+                                <td class="warning" colspan="5">Não existem pacientes cadastrados.</td>
                             </tr>
                             <!-- {{/data}} -->
                         </tbody>

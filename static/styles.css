@@ -83,6 +83,14 @@
     font-weight: 400;
   }
 
+  .small-icon {
+    font-size: 1.5em;
+  }
+
+  .big-icon {
+    font-size: 6cqw;
+  }
+
   .w-100 {
     width: 100%;
   }
@@ -91,19 +99,49 @@
     text-transform: uppercase;
   }
 
-.l-case {
-text-transform: lowercase;
-}
+  .l-case {
+  text-transform: lowercase;
+  }
+
+  *.flcase:first-letter {
+    text-transform: uppercase;
+  }
 
   .cards,
+  .content,
   .dados,
-  .content {
+  .titles
+   {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-content: center;
+    /* align-content: center; */
     width: 95%;
     gap: 20px;
+  }
+
+  .dados {
+    width: 100%;
+  }
+
+  .titles {
+    flex-direction: column;
+    padding: 40px 0;
+  }
+
+  .titles h1,
+  .titles h2 {
+    text-align: center;
+    line-height: 1em;
+    margin: 0.2em;
+  }
+
+  .titles h1 {
+    font-size: 2.5cqw;
+  }
+
+  .titles h2 {
+    font-size: 2cqw;
   }
 
   .cards {
@@ -115,26 +153,24 @@ text-transform: lowercase;
     flex-wrap: wrap;
     align-content: center;
     justify-content: center;
-    height: 12vw;
-    width: 12vw;
-    padding: 25px 15px 0;
+    height: 13vw;
+    width: 13vw;
+    padding: 20px 20px 0;
     background-color: var(--primary);
-    /* color: var(--font-primary);
-    text-align: center;
-    font-size: .95em;
-    font-weight: 600; */
-    /* gap: 10px; */
   }
 
   .card a {
     color: var(--font-primary);
     text-align: center;
-    font-size: .95em;
+    font-size: 1.4cqw;
     font-weight: 600;
     text-decoration: none;
-    gap: 10px;
   }
-
+  
+  .card a p {
+    line-height: 1.2em;
+  }
+  
   input {
     height: 2.5em;
     margin-bottom: 15px;
@@ -143,7 +179,7 @@ text-transform: lowercase;
   input:focus-visible {
     outline: var(--soft-color) solid 2px;
   }
-
+  
   button,
   .button {
     height: 3em;
@@ -159,14 +195,14 @@ text-transform: lowercase;
     text-align: center;
     color: var(--font-primary);
   }
-
+  
   a.button {
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-decoration: none;
   }
-
+  
   input:hover, button:hover, a.button:hover, .card:hover {
     box-shadow: 4px 4px 10px rgba(128, 128, 128, 0.4) !important;
   }
@@ -177,12 +213,12 @@ text-transform: lowercase;
     font-size: 0.75em;
     font-weight: 500;
   }
-
+  
   div.buttons {
     display: flex;
     justify-content: space-evenly;
   }
-
+  
   div.icon {
     display: flex;
     justify-content: center;
@@ -190,21 +226,28 @@ text-transform: lowercase;
     font-size: 7rem;
     color: var(--secondary);
   }
-
+  
   td.icon {
     cursor: pointer;
   }
-
+  
+  td.icon div {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    gap: 7px;
+  }
+  
   tr.htmx-swapping td {
     opacity: 0;
     transition: opacity 0.2s ease-out;
   }
-
+  
   table {
     width: 100%;
     border-collapse: collapse;
   }
-
+  
   table tbody tr td:first-child {
     white-space: nowrap;
   }
@@ -216,21 +259,17 @@ text-transform: lowercase;
     border-radius: 0;
     border-bottom: 1px solid var(--secondary);
   }
-
+  
   th {
     border-bottom: 2px solid var(--secondary);
   }
-
+  
   /* td.email {
     text-transform: lowercase !important;
     text-decoration: underline !important;
     color: red !important;
   } */
-
-  td.flcase::first-letter {
-    text-transform: uppercase;
-  }
-
+  
   @media (min-width: 600px) {
     .login {
       width: 60%;
@@ -242,49 +281,106 @@ text-transform: lowercase;
       width: 50%;
     }
   }
-
+  
   @media (min-width: 992px) {
     .login {
       width: 40%;
     }
   }
-
+  
   @media (min-width: 1200px) {
     .login {
       width: 30%;
     }
   }
-
+  
   @media (max-width: 992px) {
-
-    .cards {
-      width: 100%;
+    * {
+      font-size: 18px;
     }
-
+    
+    .container {
+      min-height: 70vw;
+      width: 95vw;
+      padding: 5px;
+      overflow-x: auto;
+    }
+    
+    .titles h1 {
+      font-size: 5cqw;
+    }
+    
+    .titles h2 {
+      font-size: 4cqw;
+    }
+    
     .content,
     .dados {
       justify-content: start;
     }
-
+    
+    .cards {
+      width: 100%;
+    }
+    
     .card {
       width: 100%;
-      padding: 10px 30px 0;
-      /* font-size: .85em; */
       justify-content: start;
+      padding-top: 0;
     }
-
+    
     .card a {
       display: inline-flex;
       flex-wrap: nowrap;
       text-align: start;
-      font-size: .85em;
-      justify-content: center;
+      justify-content: start;
+      gap: 15px;
+    }
+
+    .card a p {
+      padding-top: 5px;
+      font-size: 4cqw;
+    }
+
+    .big-icon {
+      font-size: 10cqw;
+      padding: 10px;
     }
 
     table {
-      /* justify-self: start; */
-      /* width: 80%; */
-      font-size: .7em;
+      font-size: 1.3em;
       overflow-x: auto;
+    }
+
+    th {
+      display: none;
+    }
+
+    td {
+      display: block;
+    }
+
+    td:before {
+      content: attr(data-th) ": ";
+      font-weight: 500;
+    }
+
+    td:first-child:before,
+    td:last-child:before,
+    td:has(input):before {
+      content: "";
+    }
+
+    td:first-child {
+      font-weight: 600;
+    }
+
+    td:last-child {
+      margin-bottom: 30px;
+    }
+
+    td.icon div {
+      justify-content: flex-start;
+      padding-left: 0;
     }
   }

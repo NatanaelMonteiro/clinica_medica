@@ -1,4 +1,4 @@
 .vscode
 *.db
 __pycache__/*
-static/fragments/__pycache__
+static/fragments/__pycache
