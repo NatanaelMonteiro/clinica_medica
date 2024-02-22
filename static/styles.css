@@ -20,6 +20,7 @@
 
   body {
     background-color: var(--bg-color);
+    overflow-y: auto;
   }
 
   .container {
@@ -31,6 +32,7 @@
     min-height: 90vh;
     width: 90vw;
     margin: auto;
+    overflow: hidden;
   }
 
   .login {
@@ -38,7 +40,7 @@
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    width: 100%;
+    width: calc(250px + 10vw);
   }
 
   .home {
@@ -50,11 +52,6 @@
   }
 
   .secondary {
-    /* height: 1.9em;
-    width: 13em;
-    font-size: 0.75em;
-    font-weight: 500; */
-    color: var(--font-secondary);
     background-color: var(--secondary);
   }
 
@@ -100,7 +97,7 @@
   }
 
   .l-case {
-  text-transform: lowercase;
+    text-transform: lowercase;
   }
 
   *.flcase:first-letter {
@@ -110,12 +107,10 @@
   .cards,
   .content,
   .dados,
-  .titles
-   {
+  .titles {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    /* align-content: center; */
     width: 95%;
     gap: 20px;
   }
@@ -155,39 +150,36 @@
     justify-content: center;
     height: 13vw;
     width: 13vw;
-    padding: 20px 20px 0;
+    padding: 15px 7px 0;
     background-color: var(--primary);
   }
 
   .card a {
-    color: var(--font-primary);
     text-align: center;
     font-size: 1.4cqw;
     font-weight: 600;
     text-decoration: none;
+    color: var(--font-primary);
   }
-  
+
   .card a p {
     line-height: 1.2em;
   }
-  
+
   input {
     height: 2.5em;
     margin-bottom: 15px;
     padding-left: 10px;
   }
+
   input:focus-visible {
     outline: var(--soft-color) solid 2px;
   }
-  
+
   button,
   .button {
     height: 3em;
     width: 100%;
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center; */
     margin-bottom: 10px;
     background-color: var(--primary);
     font-weight: 600;
@@ -195,59 +187,64 @@
     text-align: center;
     color: var(--font-primary);
   }
-  
+
   a.button {
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-decoration: none;
   }
-  
-  input:hover, button:hover, a.button:hover, .card:hover {
+
+  input:hover,
+  button:hover,
+  a.button:hover,
+  .card:hover {
     box-shadow: 4px 4px 10px rgba(128, 128, 128, 0.4) !important;
   }
-  
+
   button.mini {
     height: 1.9em;
     width: 12em;
     font-size: 0.75em;
     font-weight: 500;
   }
-  
+
   div.buttons {
     display: flex;
     justify-content: space-evenly;
   }
-  
+
   div.icon {
     display: flex;
     justify-content: center;
     margin-bottom: 15px;
-    font-size: 7rem;
+    font-size: 10cqw;
     color: var(--secondary);
   }
-  
+
   td.icon {
     cursor: pointer;
   }
-  
+
   td.icon div {
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-evenly;
+    align-items: center;
+    padding-top: 5px;
     gap: 7px;
   }
-  
+
   tr.htmx-swapping td {
     opacity: 0;
     transition: opacity 0.2s ease-out;
   }
-  
+
   table {
     width: 100%;
     border-collapse: collapse;
   }
-  
+
   table tbody tr td:first-child {
     white-space: nowrap;
   }
@@ -259,18 +256,18 @@
     border-radius: 0;
     border-bottom: 1px solid var(--secondary);
   }
-  
+
   th {
     border-bottom: 2px solid var(--secondary);
   }
-  
+
   /* td.email {
     text-transform: lowercase !important;
     text-decoration: underline !important;
     color: red !important;
   } */
-  
-  @media (min-width: 600px) {
+
+  /* @media (min-width: 600px) {
     .login {
       width: 60%;
     }
@@ -292,43 +289,66 @@
     .login {
       width: 30%;
     }
+  } */
+
+  @media (max-width: 992px) and (orientation: landscape) {
+    .container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .card a p {
+      font-size: 1em;
+    }
+
+    table {
+      font-size: 1em;
+    }
+
+    th.m-hidden,
+    td.m-hidden {
+      display: none;
+    }
   }
-  
-  @media (max-width: 992px) {
+
+  @media (max-width: 992px) and (orientation: portrait) {
     * {
       font-size: 18px;
     }
-    
+
     .container {
       min-height: 70vw;
       width: 95vw;
       padding: 5px;
-      overflow-x: auto;
     }
-    
+
+    .login {
+      width: 85%;
+    }
+
     .titles h1 {
       font-size: 5cqw;
     }
-    
+
     .titles h2 {
       font-size: 4cqw;
     }
-    
+
     .content,
     .dados {
       justify-content: start;
     }
-    
+
     .cards {
       width: 100%;
     }
-    
+
     .card {
       width: 100%;
       justify-content: start;
       padding-top: 0;
     }
-    
+
     .card a {
       display: inline-flex;
       flex-wrap: nowrap;
@@ -345,6 +365,10 @@
     .big-icon {
       font-size: 10cqw;
       padding: 10px;
+    }
+
+    div.icon {
+      font-size: 20cqw;
     }
 
     table {
