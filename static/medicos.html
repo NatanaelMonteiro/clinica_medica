@@ -24,6 +24,10 @@
             <div class="dados" hx-ext="client-side-templates">
                 <div class="w-100" hx-get="/api/medicos" hx-trigger="load" hx-swap="innerHTML"
                     mustache-array-template="medico">
+                    <!-- OS DADOS VÃO SER EXIBIDOS AQUI -->
+                    <div class="spinner">
+                        <img width="120px" src="./icons/spinner.svg">
+                    </div>
                 </div>
 
                 <template id="medico">
@@ -42,10 +46,10 @@
                             <!-- {{#data}} -->
                             <tr>
                                 <td class=" u-case">{{nome}}</td>
-                                <td>{{crm}}</td>
-                                <td class="fl-case">{{especialidade}}</td>
-                                <td class="l-case">{{turno}}</td>
-                                <td class="u-case">{{status}}</td>
+                                <td data-th="CRM">{{crm}}</td>
+                                <td data-th="fl-case">{{especialidade}}</td>
+                                <td data-th="l-case">{{turno}}</td>
+                                <td data-th="u-case">{{status}}</td>
                                 <td class="icon">
                                     <!-- <i class="fa fa-pencil"></i> -->
                                     <i class="material-symbols-outlined">edit</i>
