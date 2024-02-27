@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
-    <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="./styles.css">
 
@@ -47,12 +48,17 @@
                             <tr>
                                 <td class=" u-case">{{nome}}</td>
                                 <td data-th="CRM">{{crm}}</td>
-                                <td data-th="fl-case">{{especialidade}}</td>
-                                <td data-th="l-case">{{turno}}</td>
-                                <td data-th="u-case">{{status}}</td>
+                                <td data-th="Especialidade" class="fl-case">{{especialidade}}</td>
+                                <td data-th="Turno" class="l-case">{{turno}}</td>
+                                <td data-th="Status" class="u-case">{{status}}</td>
                                 <td class="icon">
                                     <!-- <i class="fa fa-pencil"></i> -->
-                                    <i class="material-symbols-outlined">edit</i>
+                                    <a hx-target="closest tr" hx-get="/api/medicos/{{id}}/edit"
+                                        hx-trigger="edit"
+                                        hx-swap="outerHTML swap:0.5s" onclick="onClick(this)">
+                                        <!-- <i class="fa fa-pencil"></i> -->
+                                        <i class="material-symbols-outlined">edit</i>
+                                    </a>
                                 </td>
                                 <td class="icon">
                                     <a hx-confirm="{{nome}}?" hx-delete="/api/medicos/{{id}}">
@@ -65,7 +71,7 @@
 
                             <!-- {{^data}} -->
                             <tr>
-                                <td class="warning" colspan="8">Não existem médicos cadastrados.</td>
+                                <td class="warning" colspan="6">Não existem médicos cadastrados.</td>
                             </tr>
                             <!-- {{/data}} -->
                         </tbody>

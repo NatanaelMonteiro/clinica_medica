@@ -71,11 +71,15 @@ def tables_init():
         (None, "Rancho Crux", "0001", "Traumatologia", "Noturno", "Ativo"),
         (None, "Frederico Evandro", "1111", "Urologia", "Noturno", "Recesso"),
         (None, "Ernesto Ataronte", "2222", "Oftamologia", "Diurno", "Aposentado"),
+        (None, "Evaristo Neves", "3333", "Psicologia", "Diurno", "Ativo"),
+        (None, "Garibaldo Nunes", "4444", "Cardiologia", "Noturno", "Recesso"),
     ]
 
     pacientes = [
         (None, "Natanael Lima", "natan@gmail.com", "61 9999-0000", "Internado"),
         (None, "Luciana Lima", "lulu@gmail.com", "61 9999-2222", "Em atendimento"),
+        (None, "Luciete Lima", "mariazinha@gmail.com", "61 9999-1111", "Em tratamento"),
+        (None, "Izaias Lima", "izaias@gmail.com", "61 9999-3333", "Liberado"),
     ]
 
     cur.execute("DELETE FROM medicos")

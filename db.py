@@ -14,6 +14,9 @@ def get_dados(tbl, id=None):
 def get_medicos():
     return get_dados('medicos')
 
+def get_medico(id):
+    return get_dados('medicos', id)
+
 def get_pacientes():
     return get_dados('pacientes')
 
@@ -30,6 +33,20 @@ def update_paciente(id, updated: dict):
         fields = [f"{k}='{v}'" for k, v in dados.items()]
         all_fields = ",".join(fields)
         sql = f"UPDATE pacientes SET {all_fields} WHERE id={id}"
+        cur.execute(sql)
+        con.commit()
+    return
+
+def update_medico(id, updated: dict):
+    medico = get_medico(id)
+
+    if medico:
+        dados = medico[0]
+        dados.update(updated)
+
+        fields = [f"{k}='{v}'" for k, v in dados.items()]
+        all_fields = ",".join(fields)
+        sql = f"UPDATE medicos SET {all_fields} WHERE id={id}"
         cur.execute(sql)
         con.commit()
     return

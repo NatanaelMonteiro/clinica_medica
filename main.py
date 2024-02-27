@@ -34,11 +34,11 @@ async def root():
 async def api():
     return "/app/login.html"
 
-
+# PACIENTES
 @app.get("/api/pacientes")
 async def pacientes():
     dados = db.get_pacientes()
-    time.sleep(2)
+    time.sleep(1)
     return JSONResponse(dados)
 
 @app.put("/api/pacientes/{id}", response_class=JSONResponse)
@@ -52,10 +52,17 @@ async def del_paciente(id: str):
     db.del_paciente(id)
     return ""
 
+# MEDICOS
 @app.get("/api/medicos", response_class=JSONResponse)
 async def medicos():
-    time.sleep(2)
+    time.sleep(1)
     return db.get_medicos()
+
+@app.put("/api/medicos/{id}", response_class=JSONResponse)
+async def update_medico(id, body=Depends(get_body)):
+    db.update_medico(id, body)
+    dados = db.get_medicos()
+    return dados
 
 @app.delete("/api/medicos/{id}", response_class=HTMLResponse)
 async def del_medico(id: str):
@@ -76,5 +83,16 @@ async def edit_paciente(id):
     if paciente:
         dados = paciente[0]
         return edit.paciente_html(dados)
+    else:     
+        return ""
+    
+    # RETORNAR TEMPLATE PARA EDITAR MEDICOS
+@app.get("/api/medicos/{id}/edit", response_class=HTMLResponse)
+async def edit_medico(id):
+    medico = db.get_medico(id)
+
+    if medico:
+        dados = medico[0]
+        return edit.medico_html(dados)
     else:     
         return ""
