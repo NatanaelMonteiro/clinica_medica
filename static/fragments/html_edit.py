@@ -4,7 +4,15 @@ def paciente_html(dados):
             <td><input name="nome" value="{dados['nome']}"></td>
             <td><input name="email" value="{dados['email']}"></td>
             <td><input name="telefone" value="{dados['telefone']}"></td>
-            <td><input name="status" value="{dados['status']}"></td>
+            <td>
+                <select name="status">
+                    <option value="" selected disabled hidden>Selecione</option>
+                    <option value="aguardando">Aguardando</option>
+                    <option value="em atendimento">Em atendimento</option>
+                    <option value="internado">Internado</option>
+                    <option value="liberado">Liberado</option>
+                </select>
+            </td>
             <td class="icon">
                 <div>
                     <a hx-get="/api/pacientes"
@@ -27,14 +35,29 @@ def paciente_html(dados):
         """
     return html
 
+
 def medico_html(dados):
     html = f"""
         <tr trigger="cancel" class="editing">
             <td><input name="nome" value="{dados['nome']}"></td>
             <td><input name="crm" value="{dados['crm']}"></td>
             <td><input name="especialidade" value="{dados['especialidade']}"></td>
-            <td><input name="turno" value="{dados['turno']}"></td>
-            <td><input name="status" value="{dados['status']}"></td>
+            <td>
+                <select name="turno">
+                    <option value="" selected disabled hidden>Selecione</option>
+                    <option value="diurno">Diurno</option>
+                    <option value="vespertino">Vespertino</option>
+                    <option value="noturno">Noturno</option>
+                </select>
+            </td>
+            <td>
+                <select name="status">
+                    <option value="" selected disabled hidden>Selecione</option>
+                    <option value="em atendimento">Em atendimento</option>
+                    <option value="em plantao">Em plantão</option>
+                    <option value="indisponivel">Indisponível</option>
+                </select>
+            </td>
             <td class="icon">
                 <div>
                     <a hx-get="/api/medicos"
