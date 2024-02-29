@@ -2,10 +2,10 @@
 
   :root {
     --bg-color: #d9d9d9;
-    --primary: #c3ffb4;
-    --secondary: #959595;
+    --primary: #aaecb4;
+    --secondary: #c5c5c5;
     --soft-color: #afafaf;
-    --font-primary: #7d7d7d;
+    --font-primary: #8a8a8a;
     --font-secondary: #dadada;
     --warning: #b4293e;
   }
@@ -233,17 +233,22 @@
   .card:hover {
     box-shadow: 4px 4px 10px rgba(128, 128, 128, 0.4) !important;
   }
-
+  
   button.mini {
     height: 1.9em;
     width: 12em;
     font-size: 0.75em;
     font-weight: 500;
   }
+  
+  button.alone {
+    margin-top: 20px;
+  }
 
   div.buttons {
     display: flex;
     justify-content: space-evenly;
+    gap: 1em;
   }
 
   div.icon {
@@ -289,7 +294,16 @@
     border-bottom: 1px solid var(--secondary);
   }
 
-  td>input {
+  /* td:has(button) {
+    border: none;
+  } */
+
+  td.no-border {
+    border: none;
+  }
+
+  td>input,
+  td>select {
     width: 100%;
     margin: 5px 0;
     font-size: 0.9em;
