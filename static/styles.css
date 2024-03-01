@@ -69,6 +69,24 @@
     outline: none;
   }
 
+  #toast {
+    position: fixed;
+    visibility: hidden;
+    top: calc(50vh - 50px);
+    width: calc(50vh + 50px);
+    padding: 0.5em;
+    align-self: center;
+    font-size: 1.3rem;
+    text-align: center;
+    color: var(--font-secondary);
+    background-color: var(--warning);
+    z-index: 1000;
+    }
+
+  #toast.show {
+    visibility: visible;
+  }
+
   button.swal2-cancel {
     color: var(--font-secondary);
     background-color: var(--secondary);
@@ -444,7 +462,8 @@
 
     td:first-child:before,
     td:last-child:before,
-    td:has(input):before {
+    td:has(input):before,
+    td:has(select):before {
       content: "";
     }
 
