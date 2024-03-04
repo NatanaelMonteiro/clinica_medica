@@ -42,7 +42,12 @@ async def api():
 @app.get("/api/pacientes")
 async def pacientes():
     dados = db.get_pacientes()
-    time.sleep(1)
+    # time.sleep(1)
+    return JSONResponse(dados)
+
+@app.get("/api/pacientes/{id}")
+async def paciente(id: int):
+    dados = db.get_paciente(id)
     return JSONResponse(dados)
 
 @app.post("/api/pacientes", response_class=JSONResponse)
