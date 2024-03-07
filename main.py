@@ -80,6 +80,11 @@ async def medicos():
     time.sleep(1)
     return db.get_medicos()
 
+@app.get("/api/medicos/{id}")
+async def medico(id: int):
+    dados = db.get_medico(id)
+    return JSONResponse(dados)
+
 @app.post("/api/medicos", response_class=JSONResponse)
 async def add_medico(body=Depends(get_body)):
     if is_valid(body, 5):

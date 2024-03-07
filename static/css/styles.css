@@ -130,7 +130,7 @@
     text-transform: lowercase;
   }
 
-  *.flcase:first-letter {
+  *.fl-case:first-letter {
     text-transform: uppercase;
   }
 

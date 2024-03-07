@@ -23,15 +23,15 @@
 
         <div class="content">
             <div class="dados" hx-ext="client-side-templates">
-                <div class="w-100" hx-get="/api/medicos" hx-trigger="load" hx-swap="innerHTML"
-                    mustache-array-template="medico">
+                <div class="w-100" hx-get="/api/medicos" hx-trigger="load delay 0.3s" hx-swap="innerHTML"
+                    mustache-array-template="medico-template">
                     <!-- OS DADOS VÃO SER EXIBIDOS AQUI -->
                     <div class="spinner">
                         <img width="120px" src="./icons/spinner.svg">
                     </div>
                 </div>
 
-                <template id="medico">
+                <template id="medico-template">
                     <table>
                         <thead>
                             <tr>
@@ -49,22 +49,25 @@
                                 <td class=" u-case">{{nome}}</td>
                                 <td data-th="CRM">{{crm}}</td>
                                 <td data-th="Especialidade" class="fl-case">{{especialidade}}</td>
-                                <td data-th="Turno" class="l-case">{{turno}}</td>
+                                <td data-th="Turno" class="fl-case">{{turno}}</td>
                                 <td data-th="Status" class="u-case">{{status}}</td>
                                 <td class="icon">
-                                    <!-- <i class="fa fa-pencil"></i> -->
-                                    <a hx-target="closest tr" hx-get="/api/medicos/{{id}}/edit"
-                                        hx-trigger="edit"
-                                        hx-swap="outerHTML swap:0.5s" onclick="onClick(this)">
-                                        <!-- <i class="fa fa-pencil"></i> -->
-                                        <i class="material-symbols-outlined">edit</i>
-                                    </a>
-                                </td>
-                                <td class="icon">
-                                    <a hx-confirm="{{nome}}?" hx-delete="/api/medicos/{{id}}">
-                                        <!-- <i class="fa fa-trash-o"></i> -->
-                                        <i class="material-symbols-outlined">delete</i>
-                                    </a>
+                                    <div hx-ext="client-side-templates" mustache-array-template="detalhe-template">
+                                        <a title="Detalhar dados do médico" hx-get="/api/medicos/{{id}}"
+                                            hx-target="#detalhe section" hx-swap="innerHTML" onclick="showDetail()">
+                                            <i class="material-symbols-outlined">clinical_notes</i>
+                                        </a>
+                                        <a title="Editar dados do médico" hx-target="closest tr"
+                                            hx-get="/api/medicos/{{id}}/edit" hx-trigger="edit"
+                                            hx-swap="outerHTML swap:0.5s" onclick="onClick(this)">
+                                            <!-- <i class="fa fa-pencil"></i> -->
+                                            <i class="material-symbols-outlined">edit</i>
+                                        </a>
+                                        <a title="Deletar Registro do médico" hx-confirm="{{nome}}?"
+                                            hx-delete="/api/medicos/{{id}}">
+                                            <!-- <i class="fa fa-trash-o"></i> -->
+                                            <i class="material-symbols-outlined">delete</i>
+                                        </a>
                                 </td>
                             </tr>
                             <!-- {{/data}} -->
@@ -90,20 +93,66 @@
                 <div id="toast" class="animate__animated animate__faster">
                     <!-- Exibir mensagem de erro -->
                 </div>
+                <div id="detalhe">
+                    <div id="info" class="animate__animated animate__faster">
+                        <div id="close">
+                            <a onclick="hideDetail()">
+                                <i class="material-symbols-outlined">close</i>
+                            </a>
+                        </div>
 
+                        <section></section>
+                        <template id="detalhe-template">
+
+                            {{#data}}
+                            <h3 class="u-case">{{nome}}</h3>
+
+                            <ul>
+                                <li>
+                                    <label>CRM</label>
+                                    <div>{{crm}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Especialidade</label>
+                                    <div class="fl-case">{{especialidade}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Turno</label>
+                                    <div class="fl-case">{{turno}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Status</label>
+                                    <div class="u-case">{{status}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Observações</label>
+                                    <div>
+                                        Lorem ipsum dolor sit amet consectetur
+                                        adipisicing elit. Debitis facere aperiam ipsa neque
+                                        dignissimos corrupti, blanditiis consequuntur, sed
+                                        minus suscipit beatae laudantium repellendus recusandae
+                                        distinctio corporis, numquam hic incidunt consequatur!
+                                    </div>
+                                </li>
+                            </ul>
+                            {{/data}}
+                        </template>
+                    </div>
+                </div>
             </div>
-
         </div>
-    </div>
-    </div>
 
-    <script src="https://unpkg.com/htmx.org@1.9.10"
-        integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
-        crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
-    <script src="https://unpkg.com/mustache@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./js/functions.js"></script>
+        <script src="https://unpkg.com/htmx.org@1.9.10"
+            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+            crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/htmx.org/dist/ext/client-side-templates.js"></script>
+        <script src="https://unpkg.com/mustache@latest"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="./js/functions.js"></script>
 
 </body>
 
