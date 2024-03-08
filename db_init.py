@@ -1,6 +1,6 @@
 # Criar a estrutura inicial do banco de dados em SQLite
 
-import sqlite3
+import connection
 
 print(f"Script {__name__} executado.")
 
@@ -9,8 +9,7 @@ def tbl_create():
     """
     Criar as tabelas MEDICOS e PACIENTES.
     """
-    con = sqlite3.connect("clinica.db")
-    cur = con.cursor()
+    con, cur = connection.get()
 
     try:
         cur.execute("DROP TABLE medicos")
@@ -51,8 +50,8 @@ def tbl_create():
 def tables_init():
     """Incluir dados iniciais de teste nas tabelas."""
 
-    con = sqlite3.connect("clinica.db")
-    cur = con.cursor()
+    con, cur = connection.get()
+
 
 
     # cur.execute(
@@ -68,25 +67,29 @@ def tables_init():
     # )
 
     medicos = [
-        (None, "Rancho Crux", "0001", "Traumatologia", "Noturno", "Ativo"),
-        (None, "Frederico Evandro", "1111", "Urologia", "Noturno", "Recesso"),
-        (None, "Ernesto Ataronte", "2222", "Oftamologia", "Diurno", "Aposentado"),
-        (None, "Evaristo Neves", "3333", "Psicologia", "Diurno", "Ativo"),
-        (None, "Garibaldo Nunes", "4444", "Cardiologia", "Noturno", "Recesso"),
+        ("Rancho Crux", "0001", "Traumatologia", "Noturno", "Ativo"),
+        ("Frederico Evandro", "1111", "Urologia", "Noturno", "Recesso"),
+        ("Ernesto Ataronte", "2222", "Oftamologia", "Diurno", "Aposentado"),
+        ("Evaristo Neves", "3333", "Psicologia", "Diurno", "Ativo"),
+        ("Garibaldo Nunes", "4444", "Cardiologia", "Noturno", "Recesso"),
     ]
 
     pacientes = [
-        (None, "Natanael Lima", "natan@gmail.com", "61 9999-0000", "Internado"),
-        (None, "Luciana Lima", "lulu@gmail.com", "61 9999-2222", "Em atendimento"),
-        (None, "Luciete Lima", "mariazinha@gmail.com", "61 9999-1111", "Em tratamento"),
-        (None, "Izaias Lima", "izaias@gmail.com", "61 9999-3333", "Liberado"),
+        ("Natanael Lima", "natan@gmail.com", "61 9999-0000", "Internado"),
+        ("Luciana Lima", "lulu@gmail.com", "61 9999-2222", "Em atendimento"),
+        ("Luciete Lima", "mariazinha@gmail.com", "61 9999-1111", "Em tratamento"),
+        ("Izaias Lima", "izaias@gmail.com", "61 9999-3333", "Liberado"),
     ]
 
     cur.execute("DELETE FROM medicos")
     cur.execute("DELETE FROM pacientes")
 
-    cur.executemany("INSERT INTO medicos VALUES (?,?,?,?,?,?)", medicos)
-    cur.executemany("INSERT INTO pacientes VALUES (?,?,?,?,?)", pacientes)
+    if connection.DB_TYPE == "psql":
+        cur.executemany("INSERT INTO medicos VALUES (DEFAULT,%s,%s,%s,%s,%s)", medicos)
+        cur.executemany("INSERT INTO pacientes VALUES (DEFAULT,%s,%s,%s,%s)", pacientes)
+    else:
+        cur.executemany("INSERT INTO medicos VALUES (NULL,?,?,?,?,?)", medicos)
+        cur.executemany("INSERT INTO pacientes VALUES (NULL,?,?,?,?)", pacientes)
     
 
     con.commit()
