@@ -92,7 +92,7 @@
     position: fixed;
     visibility: hidden;
     top: calc(50vh - 50px);
-    width: calc(50vh + 50px);
+    width: calc(85vh + 50px);
     padding: 0.5em;
     align-self: center;
     font-size: 1.3rem;
