@@ -2,7 +2,7 @@ import sqlite3
 import psycopg2
 import psycopg2.extras
 
-DB_TYPE = "psql"
+DB_TYPE = "sql"
 
 def get():
     if DB_TYPE == "psql":
