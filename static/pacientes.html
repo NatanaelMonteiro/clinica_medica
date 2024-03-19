@@ -117,8 +117,18 @@
 
                             <ul>
                                 <li>
-                                    <label>E-mail</label>
-                                    <div class="l-case">{{email}}</div>
+                                    <label>RG</label>
+                                    <div>{{rg}}</div>
+                                </li>
+
+                                <li>
+                                    <label>CPF</label>
+                                    <div>{{cpf}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Data de Nascimento</label>
+                                    <div>{{dt_nasc}}</div>
                                 </li>
 
                                 <li>
@@ -127,21 +137,43 @@
                                 </li>
 
                                 <li>
-                                    <label>Situação</label>
-                                    <div class="fl-case">{{status}}</div>
+                                    <label>E-mail</label>
+                                    <div class="l-case">{{email}}</div>
                                 </li>
 
                                 <li>
-                                    <label>Observações</label>
-                                    <div>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Debitis facere aperiam ipsa neque
-                                        dignissimos corrupti, blanditiis consequuntur, sed
-                                        minus suscipit beatae laudantium repellendus recusandae
-                                        distinctio corporis, numquam hic incidunt consequatur!
-                                    </div>
+                                    <label>Sexo</label>
+                                    <div>{{sexo}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Peso</label>
+                                    <div>{{peso}} kg</div>
+                                </li>
+
+                                <li>
+                                    <label>Altura</label>
+                                    <div>{{altura}} cm</div>
+                                </li>
+
+                                <li>
+                                    <label>Tipo Sanguineo</label>
+                                    <div class="u-case">{{tp_sanguineo}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Status</label>
+                                    <div class="u-case">{{status}}</div>
+                                </li>
+
+                                <li class="endereco">
+                                    <label>Endereço</label>
+                                    <div class="u-case">{{logradouro}}</div>
+                                    <div class="u-case">{{cidade}} - {{uf}}</div>
+                                    <div>CEP: {{cep}}</div>
                                 </li>
                             </ul>
+                    
                             {{/data}}
                         </template>
                     </div>

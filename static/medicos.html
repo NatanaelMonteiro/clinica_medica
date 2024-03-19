@@ -42,11 +42,12 @@
                         <thead>
                             <tr>
                                 <th>Nome</th>
-                                <th>CRM</th>
-                                <th>Especialidade</th>
-                                <th class="w-15">Turno</th>
-                                <th class="w-15">Situação</th>
-                                <th colspan="2">&nbsp;</th>
+                                <th class="w-1">CRM</th>
+                                <th class="w-2">Telefone</th>
+                                <th class="m-hidden">Especialidade</th>
+                                <th class="w-1">Turno</th>
+                                <th class="w-2">Situação</th>
+                                <th class="w-1">&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody hx-target="closest tr" hx-swap="outerHTML swap:0.5s">
@@ -54,7 +55,8 @@
                             <tr>
                                 <td class=" u-case">{{nome}}</td>
                                 <td data-th="CRM">{{crm}}</td>
-                                <td data-th="Especialidade" class="fl-case">{{especialidade}}</td>
+                                <td data-th="Telefone">{{telefone}}</td>
+                                <td data-th="Especialidade" class="m-hidden fl-case">{{especialidade}}</td>
                                 <td data-th="Turno" class="fl-case">{{turno}}</td>
                                 <td data-th="Status" class="u-case">{{status}}</td>
                                 <td class="icon">
@@ -115,13 +117,43 @@
 
                             <ul>
                                 <li>
-                                    <label>CRM</label>
-                                    <div>{{crm}}</div>
+                                    <label>Especialidade</label>
+                                    <div class="fl-case">{{especialidade}}</div>
                                 </li>
 
                                 <li>
-                                    <label>Especialidade</label>
-                                    <div class="fl-case">{{especialidade}}</div>
+                                    <label>RG</label>
+                                    <div>{{rg}}</div>
+                                </li>
+
+                                <li>
+                                    <label>CPF</label>
+                                    <div>{{cpf}}</div>
+                                </li>
+
+                                <li>
+                                    <label>CRM</label>
+                                    <div class="u-case">{{crm}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Telefone</label>
+                                    <div>{{telefone}}</div>
+                                </li>
+
+                                <li>
+                                    <label>E-mail</label>
+                                    <div class="l-case">{{email}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Sexo</label>
+                                    <div>{{sexo}}</div>
+                                </li>
+
+                                <li>
+                                    <label>Data de Nascimento</label>
+                                    <div>{{dt_nasc}}</div>
                                 </li>
 
                                 <li>
@@ -134,15 +166,11 @@
                                     <div class="u-case">{{status}}</div>
                                 </li>
 
-                                <li>
-                                    <label>Observações</label>
-                                    <div>
-                                        Lorem ipsum dolor sit amet consectetur
-                                        adipisicing elit. Debitis facere aperiam ipsa neque
-                                        dignissimos corrupti, blanditiis consequuntur, sed
-                                        minus suscipit beatae laudantium repellendus recusandae
-                                        distinctio corporis, numquam hic incidunt consequatur!
-                                    </div>
+                                <li class="endereco">
+                                    <label>Endereço</label>
+                                    <div class="u-case">{{logradouro}}</div>
+                                    <div class="u-case">{{cidade}} - {{uf}}</div>
+                                    <div>CEP: {{cep}}</div>
                                 </li>
                             </ul>
                             {{/data}}
