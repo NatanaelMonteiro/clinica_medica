@@ -5,10 +5,9 @@ import connection
 print(f"Script {__name__} executado.")
 
 
-def tbl_create():
-    """
-    Criar as tabelas MEDICOS e PACIENTES.
-    """
+def drop_tables():
+    """Excluir as tabelas."""
+
     con, cur = connection.get()
 
     try:
@@ -17,27 +16,62 @@ def tbl_create():
     except:
         pass
 
+    con.commit()
+    con.close()
+
+def tbl_create():
+    """Criar as tabelas MEDICOS e PACIENTES."""
+    con, cur = connection.get()
+
+    PRIMARY_KEY = (
+        "id SERIAL NOT NULL PRIMARY KEY"
+        if connection.DB_TYPE == connection.TYPE_PSQL
+        else "id integer PRIMARY KEY AUTOINCREMENT"
+    )
 
     cur.execute(
-        """
+        f"""
             CREATE TABLE IF NOT EXISTS medicos
-            (id integer PRIMARY KEY AUTOINCREMENT,
-            nome text,
-            crm text,
-            especialidade text,
-            turno text,
-            status text) 
+            (   {PRIMARY_KEY},
+                nome varchar(150),
+                rg varchar(15),
+                cpf varchar(14),
+                dt_nasc date,
+                sexo varchar(15),
+                uf varchar(2),
+                cidade varchar(100),
+                cep varchar(9),
+                logradouro varchar(150),
+                crm varchar(10),
+                email varchar(100),
+                telefone varchar(15),
+                especialidade varchar(50),
+                turno varchar(20),
+                status varchar(20)
+            )
         """
     )
 
     cur.execute(
-        """
+        f"""
             CREATE TABLE IF NOT EXISTS pacientes
-            (id integer PRIMARY KEY AUTOINCREMENT,
-            nome text,
-            email text,
-            telefone text,
-            status text) 
+            (   {PRIMARY_KEY},
+                nome varchar(150),
+                rg varchar(15),
+                cpf varchar(14),
+                dt_nasc date,
+                sexo varchar(15),
+                peso integer,
+                altura integer,
+                tp_sanguineo varchar(3),
+                uf varchar(2),
+                cidade varchar(100),
+                cep varchar(9),
+                logradouro varchar(150),
+                email varchar(100),
+                telefone varchar(15),
+                status varchar(20)
+            )
         """
     )
 
@@ -52,44 +86,54 @@ def tables_init():
 
     con, cur = connection.get()
 
-
-
-    # cur.execute(
-    #     """
-    #         INSERT INTO medicos VALUES(
-    #             "Rancho Crux",
-    #             "0001",
-    #             "Traumatologia",
-    #             "Noturno",
-    #             "Ativo"
-    #         )
-    #     """
-    # )
-
-    medicos = [
-        ("Rancho Crux", "0001", "Traumatologia", "Noturno", "Ativo"),
-        ("Frederico Evandro", "1111", "Urologia", "Noturno", "Recesso"),
-        ("Ernesto Ataronte", "2222", "Oftamologia", "Diurno", "Aposentado"),
-        ("Evaristo Neves", "3333", "Psicologia", "Diurno", "Ativo"),
-        ("Garibaldo Nunes", "4444", "Cardiologia", "Noturno", "Recesso"),
+    medicos = [(
+            "Rancho Cruxx",
+            "12345/SSP-PA",
+            "123.456.789-10",
+            "1970-01-11",
+            "Masculino",
+            "DF",
+            "Taguatinga",
+            "71123-123",
+            "Rua 123, lote 3, casa 22",
+            "001/PA",
+            "rancho_med_cruxx@gmail.com",
+            "(61) 98111-1111",
+            "Cardiologista",
+            "Noturno",
+            "Ativo"
+            ),
     ]
 
     pacientes = [
-        ("Natanael Lima", "natan@gmail.com", "61 9999-0000", "Internado"),
-        ("Luciana Lima", "lulu@gmail.com", "61 9999-2222", "Em atendimento"),
-        ("Luciete Lima", "mariazinha@gmail.com", "61 9999-1111", "Em tratamento"),
-        ("Izaias Lima", "izaias@gmail.com", "61 9999-3333", "Liberado"),
+        (
+            "Jéssica Vieira Sousa",
+            "12345/SSP-MT",
+            "123.456.789-10",
+            "1998-03-30",
+            "Feminino",
+            54,
+            163,
+            "A+",
+            "DF",
+            "Vicente Pires",
+            "71123-123",
+            "Rua 123, lote 14, casa 9",
+            "jessiquinha@gmail.com",
+            "(61) 98222-2222",
+            "Agendada"
+        ),
     ]
 
     cur.execute("DELETE FROM medicos")
     cur.execute("DELETE FROM pacientes")
 
-    if connection.DB_TYPE == "psql":
-        cur.executemany("INSERT INTO medicos VALUES (DEFAULT,%s,%s,%s,%s,%s)", medicos)
-        cur.executemany("INSERT INTO pacientes VALUES (DEFAULT,%s,%s,%s,%s)", pacientes)
+    if connection.DB_TYPE == connection.TYPE_PSQL:
+        cur.executemany("INSERT INTO medicos VALUES (DEFAULT,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", medicos)
+        cur.executemany("INSERT INTO pacientes VALUES (DEFAULT,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", pacientes)
     else:
-        cur.executemany("INSERT INTO medicos VALUES (NULL,?,?,?,?,?)", medicos)
-        cur.executemany("INSERT INTO pacientes VALUES (NULL,?,?,?,?)", pacientes)
+        cur.executemany("INSERT INTO medicos VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", medicos)
+        cur.executemany("INSERT INTO pacientes VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", pacientes)
     
 
     con.commit()
@@ -98,5 +142,6 @@ def tables_init():
     print("Dados iniciais incluidos nas tabelas.")
 
 if __name__ == "__main__":
+    drop_tables()
     tbl_create()
     tables_init()
