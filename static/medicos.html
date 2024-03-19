@@ -24,7 +24,7 @@
 
         <div class="titles">
             <h1>Clínica Médica</h1>
-            <h2>Cadastrado de Médicos</h2>
+            <h2>Cadastro de Médicos</h2>
         </div>
 
         <div class="content">
@@ -63,7 +63,7 @@
                                             hx-target="#detalhe section" hx-swap="innerHTML" onclick="showDetail()">
                                             <i class="material-symbols-outlined">clinical_notes</i>
                                         </a>
-                                        <a title="Editar dados do médico" hx-target="closest tr"
+                                        <a title="Editar dados do médico" hx-target="closest table"
                                             hx-get="/api/medicos/{{id}}/edit" hx-trigger="edit"
                                             hx-swap="outerHTML swap:0.5s" onclick="onClick(this)">
                                             <!-- <i class="fa fa-pencil"></i> -->
