@@ -34,19 +34,19 @@ def tbl_create():
             CREATE TABLE IF NOT EXISTS medicos
             (   {PRIMARY_KEY},
                 nome varchar(150),
+                especialidade varchar(50),
+                crm varchar(10),
                 rg varchar(15),
                 cpf varchar(14),
                 dt_nasc date,
-                sexo varchar(15),
-                uf varchar(2),
-                cidade varchar(100),
-                cep varchar(9),
-                logradouro varchar(150),
-                crm varchar(10),
-                email varchar(100),
                 telefone varchar(15),
-                especialidade varchar(50),
+                email varchar(100),
+                sexo varchar(15),
                 turno varchar(20),
+                cep varchar(9),
+                cidade varchar(100),
+                uf varchar(2),
+                logradouro varchar(150),
                 status varchar(20)
             )
         """
@@ -60,16 +60,16 @@ def tbl_create():
                 rg varchar(15),
                 cpf varchar(14),
                 dt_nasc date,
+                telefone varchar(15),
+                email varchar(100),
                 sexo varchar(15),
                 peso integer,
                 altura integer,
                 tp_sanguineo varchar(3),
-                uf varchar(2),
-                cidade varchar(100),
                 cep varchar(9),
+                cidade varchar(100),
+                uf varchar(2),
                 logradouro varchar(150),
-                email varchar(100),
-                telefone varchar(15),
                 status varchar(20)
             )
         """

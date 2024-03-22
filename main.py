@@ -52,7 +52,7 @@ async def paciente(id: int):
 
 @app.post("/api/pacientes", response_class=JSONResponse)
 async def add_paciente(body=Depends(get_body)):
-    if is_valid(body, 4):
+    if is_valid(body, 15):
         db.add_paciente(body)
         dados = db.get_pacientes()
         return dados
@@ -61,7 +61,7 @@ async def add_paciente(body=Depends(get_body)):
 
 @app.put("/api/pacientes/{id}", response_class=JSONResponse)
 async def update_paciente(id: int, body=Depends(get_body)):
-    if is_valid(body, 4):
+    if is_valid(body, 15):
         db.update_paciente(id, body)
         dados = db.get_pacientes()
         return dados
@@ -87,7 +87,7 @@ async def medico(id: int):
 
 @app.post("/api/medicos", response_class=JSONResponse)
 async def add_medico(body=Depends(get_body)):
-    if is_valid(body, 5):
+    if is_valid(body, 15):
         db.add_medico(body)
         dados = db.get_medicos()
         return dados
@@ -96,7 +96,7 @@ async def add_medico(body=Depends(get_body)):
 
 @app.put("/api/medicos/{id}", response_class=JSONResponse)
 async def update_medico(id: int, body=Depends(get_body)):
-    if is_valid(body, 5):
+    if is_valid(body, 15):
         db.update_medico(id, body)
         dados = db.get_medicos()
         return dados

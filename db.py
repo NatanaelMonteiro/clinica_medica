@@ -40,11 +40,14 @@ def add(table, dados: dict):
         values = [f"'{v}'" for _, v in dados.items()]
         all_values = ",".join(values)
 
+        fields = [f"'{v}'" for _, v in dados.items()]
+        all_fields = ",".join(fields)
+
         # FIX: Resolver com Strategy futuramente
         if connection.DB_TYPE == connection.TYPE_PSQL:
-            sql = f"INSERT INTO {table} values (DEFAULT, {all_values})"
+            sql = f"INSERT INTO {table} (id, {all_fields}) values (DEFAULT, {all_values})"
         else:
-            sql = f"INSERT INTO {table} values (NULL, {all_values})"
+            sql = f"INSERT INTO {table} (id, {all_fields}) values (NULL, {all_values})"
 
         cur.execute(sql)
         con.commit()
