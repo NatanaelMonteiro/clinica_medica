@@ -3,18 +3,20 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
 
 import json
-import time 
+import time
 import urllib.parse as html
 
 import db
 import db_init
-import static.fragments.html_add as add
-import static.fragments.html_edit as edit
+
+# import static.fragments.html_add as add
+# import static.fragments.html_edit as edit
 
 ERR_MSG = "Todos os campos precisam ser preenchidos!!!"
 
 app = FastAPI()
 app.mount("/app", StaticFiles(directory="static", html="true"), name="static")
+
 
 async def get_body(req: Request):
     payload = await req.body()
@@ -27,6 +29,7 @@ async def get_body(req: Request):
         lista = list(payload.split("&"))
         body = dict(l.split("=") for l in lista)
     return body
+
 
 @app.get("/", response_class=RedirectResponse)
 async def root():
@@ -45,10 +48,12 @@ async def pacientes():
     # time.sleep(1)
     return JSONResponse(dados)
 
+
 @app.get("/api/pacientes/{id}")
 async def paciente(id: int):
     dados = db.get_paciente(id)
     return JSONResponse(dados)
+
 
 @app.post("/api/pacientes", response_class=JSONResponse)
 async def add_paciente(body=Depends(get_body)):
@@ -59,6 +64,14 @@ async def add_paciente(body=Depends(get_body)):
     else:
         raise HTTPException(status_code=422, detail=ERR_MSG)
 
+
+@app.post("/api/pacientes/search", response_class=JSONResponse)
+async def get_pacientes(body=Depends(get_body)):
+    search = body["search"]
+    dados = db.get_pacientes() if len(search) < 2 else db.search_pacientes(search)
+    return dados
+
+
 @app.put("/api/pacientes/{id}", response_class=JSONResponse)
 async def update_paciente(id: int, body=Depends(get_body)):
     if is_valid(body, 15):
@@ -67,6 +80,7 @@ async def update_paciente(id: int, body=Depends(get_body)):
         return dados
     else:
         raise HTTPException(status_code=422, detail=ERR_MSG)
+
 
 @app.delete("/api/pacientes/{id}", response_class=HTMLResponse)
 async def del_paciente(id: int):
@@ -77,13 +91,15 @@ async def del_paciente(id: int):
 # MEDICOS-----------------------------------------------------------
 @app.get("/api/medicos", response_class=JSONResponse)
 async def medicos():
-    time.sleep(1)
+    # time.sleep()
     return db.get_medicos()
+
 
 @app.get("/api/medicos/{id}")
 async def medico(id: int):
     dados = db.get_medico(id)
     return JSONResponse(dados)
+
 
 @app.post("/api/medicos", response_class=JSONResponse)
 async def add_medico(body=Depends(get_body)):
@@ -94,6 +110,14 @@ async def add_medico(body=Depends(get_body)):
     else:
         raise HTTPException(status_code=422, detail=ERR_MSG)
 
+
+@app.post("/api/medicos/search", response_class=JSONResponse)
+async def get_medicos(body=Depends(get_body)):
+    busca = body["search"]
+    dados = db.get_medicos() if len(busca) < 2 else db.search_medicos(busca)
+    return dados
+
+
 @app.put("/api/medicos/{id}", response_class=JSONResponse)
 async def update_medico(id: int, body=Depends(get_body)):
     if is_valid(body, 15):
@@ -103,47 +127,59 @@ async def update_medico(id: int, body=Depends(get_body)):
     else:
         raise HTTPException(status_code=422, detail=ERR_MSG)
 
+
 @app.delete("/api/medicos/{id}", response_class=HTMLResponse)
 async def del_medico(id: int):
     db.del_medico(id)
     return
 
 
+# RETORNA FRAGMENTOS DE HTML
+
+
 # RETORNAR TEMPLATE PARA INCLUIR PACIENTES--------------------------------------
-@app.get("/api/pacientes/0/add", response_class=HTMLResponse)
+@app.get("/html/pacientes/new/add", response_class=HTMLResponse)
 async def add_paciente():
-    return add.paciente_html()
+    return fragment("paciente_add")
 
 
 # RETORNAR TEMPLATE PARA INCLUIR MEDICOS-----------------------------------------
-@app.get("/api/medicos/0/add", response_class=HTMLResponse)
+@app.get("/html/medicos/new/add", response_class=HTMLResponse)
 async def add_medico():
-    return add.medico_html()
+    return fragment("medico_add")
 
 
 # RETORNAR TEMPLATE PARA EDITAR PACIENTES-----------------------------------------
-@app.get("/api/pacientes/{id}/edit", response_class=HTMLResponse)
+@app.get("/html/pacientes/{id}/edit", response_class=HTMLResponse)
 async def edit_paciente(id: int):
-    paciente = db.get_paciente(id)
+    dados = db.get_paciente(id)
+    html = fragment_format(dados, "paciente_edit")
+    return html
 
-    if paciente:
-        dados = paciente[0]
-        return edit.paciente_html(dados)
-    else:     
-        raise HTTPException(status_code=404)
-    
 
 # RETORNAR TEMPLATE PARA EDITAR MEDICOS-------------------------------------------
-@app.get("/api/medicos/{id}/edit", response_class=HTMLResponse)
+@app.get("/html/medicos/{id}/edit", response_class=HTMLResponse)
 async def edit_medico(id: int):
-    medico = db.get_medico(id)
+    dados = db.get_medico(id)
+    html = fragment_format(dados, "medico_edit")
+    return html
 
-    if medico:
-        dados = medico[0]
-        return edit.medico_html(dados)
-    else:     
-        raise HTTPException(status_code=404)
-    
+
+# RETORNA DETALHE---------------------------------------------------------
+@app.get("/html/pacientes/{id}/detalhe", response_class=HTMLResponse)
+async def detalhe_paciente(id):
+    dados = db.get_paciente(id)
+    return fragment_format(dados, "paciente_detalhe")
+
+
+@app.get("/html/medicos/{id}/detalhe", response_class=HTMLResponse)
+async def detalhe_medico(id):
+    dados = db.get_medico(id)
+    return fragment_format(dados, "medico_detalhe")
+
+
+# FUNÇÕES AUXILIARES E ENDPOINTS DE TESTE
+
 
 # RESETAR O BANDO DE DADOS---------------------------------------------------------
 @app.get("/reset", response_class=RedirectResponse)
@@ -151,6 +187,21 @@ def db_reset():
     db_init.tables_init()
     return "/app/home.html"
 
+
 # ----------------------------------------------------------------------------------
 def is_valid(body: dict, qtd: int):
-    return sum([1 if v else 0 for _,v in body.items()]) == qtd
+    return sum([1 if v else 0 for _, v in body.items()]) == qtd
+
+
+def fragment(frag):
+    html = open(f"./static/fragments/{frag}.html", "r", encoding="utf-8").readlines()
+    return "".join(html)
+
+
+def fragment_format(dados, frag):
+    if dados:
+        html = fragment(frag)
+        html = html.format(**dados[0])
+        return html
+    else:
+        raise HTTPException(status_code=404)

@@ -1,0 +1,101 @@
+<div id="dialog" class="show background">
+    <div class="info animate__animated animate__faster animate__fadeInUp">
+        <div class="close">
+            <h3>Cadastrar Médico</h3>
+            <a onclick="closeDialog('dialog')" hx-get="/api/medicos" hx-swap="outerHTML" hx-target="#dialog">
+                <i class="material-symbols-outlined">close</i>
+            </a>
+        </div>
+
+        <section>
+            <table class="form">
+                <tr trigger="cancel" class="editing">
+                    <td><input placeholder="Nome do médico" name="nome" value=""></td>
+                    <td><input placeholder="CRM" onkeyup="crmMask(this)" name="crm" value=""></td>
+                    <td><input placeholder="E-mail do médico" name="email" value=""></td>
+                    <td><input placeholder="Telefone" onkeyup="phoneMask(this)" name="telefone" value=""></td>
+                    <td><input placeholder="RG" onkeyup="rgMask(this)" name="rg" value=""></td>
+                    <td><input placeholder="CPF" onkeyup="cpfMask(this)" name="cpf" value=""></td>
+                    <td>
+                        <select name="especialidade" required>
+                            <option value="" selected disabled hidden>Selecione a Especialidade</option>
+                            <option value="psicologia">Psicologia</option>
+                            <option value="psiquiatria">Psiquiatria</option>
+                            <option value="psicanalise">Psicanalise</option>
+                        </select>
+                    </td>
+                    <td><input placeholder="Data de nascimento" name="dt_nasc" value=""></td>
+                    <td>
+                        <select name="sexo" required>
+                            <option value="" selected disabled hidden>Selecione o sexo</option>
+                            <option value="feminino">Feminino</option>
+                            <option value="masculino">Masculino</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="UF" required>
+                            <option value="" selected disabled hidden>Selecione o estado</option>
+                            <option value="AC">AC</option>
+                            <option value="AL">AL</option>
+                            <option value="AM">AM</option>
+                            <option value="AP">AP</option>
+                            <option value="BA">BA</option>
+                            <option value="CE">CE</option>
+                            <option value="DF">DF</option>
+                            <option value="ES">ES</option>
+                            <option value="GO">GO</option>
+                            <option value="MA">MA</option>
+                            <option value="MG">MG</option>
+                            <option value="MT">MT</option>
+                            <option value="MS">MS</option>
+                            <option value="PA">PA</option>
+                            <option value="PB">PB</option>
+                            <option value="PE">PE</option>
+                            <option value="PI">PI</option>
+                            <option value="PR">PR</option>
+                            <option value="RJ">RJ</option>
+                            <option value="RN">RN</option>
+                            <option value="RO">RO</option>
+                            <option value="RR">RR</option>
+                            <option value="RS">RS</option>
+                            <option value="SC">SC</option>
+                            <option value="SE">SE</option>
+                            <option value="SP">SP</option>
+                            <option value="TO">TO</option>
+                        </select>
+                    </td>
+                    <td><input placeholder="Cidade" name="cidade" value=""></td>
+                    <td><input placeholder="Endereço" name="logradouro" value=""></td>
+                    <td><input placeholder="CEP" name="cep" value=""></td>
+                    <td>
+                        <select name="turno" required>
+                            <option value="" selected hidden>Selecione o turno</option>
+                            <option value="diurno">Diurno</option>
+                            <option value="noturno">Noturno</option>
+                            <option value="vespertino">Vespertino</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="status" required>
+                            <option value="" selected hidden>Selecione a situação</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <div class="buttons">
+            <a class="button secondary" hx-get="/api/medicos" title="Cancelar a alteração" hx-swap="outerHTML"
+                hx-target="#dialog">
+                Cancelar
+            </a>
+
+            <a class="button" hx-trigger="click" hx-include="#dialog" hx-post="/api/medicos" title="Salvar"
+                hx-target="#dialog" hx-swap="outerHTML">
+                Salvar
+            </a>
+        </div>
+    </div>
+</div>
