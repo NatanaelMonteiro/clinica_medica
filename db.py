@@ -7,6 +7,10 @@ def get_medicos():
     return get_dados("medicos")
 
 
+def get_medicos_paged(len_page, page=0):
+    return get_dados_paged("medicos", len_page, page)
+
+
 def get_medico(id):
     return get_dados("medicos", id)
 
@@ -80,6 +84,15 @@ def get_dados(tbl, id=None):
     return dados
 
 
+def get_dados_paged(tbl, len_page=0, page=-1):
+    sql = f"SELECT * FROM {tbl} ORDER BY 2"
+    sql += f" LIMIT {len_page} OFFSET {page * len_page}" if page >= 0 else ""
+    cur.execute(sql)
+    rows = cur.fetchall()
+    dados = [dict(row) for row in rows]
+    return dict({"info": dados})
+
+
 def search_medicos(param):
     return search("medicos", param)
 
@@ -112,3 +125,9 @@ def delete(tbl, id):
     sql = f"DELETE FROM {tbl} WHERE id={id}"
     cur.execute(sql)
     con.commit()
+
+
+def count(tbl):
+    sql = f"SELECT COUNT(*) AS total FROM {tbl}"
+    cur.execute(sql)
+    return cur.fetchone()["total"]
