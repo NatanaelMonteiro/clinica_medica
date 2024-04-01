@@ -105,10 +105,10 @@ async def del_paciente(id: int):
 @app.get("/api/medicos", response_class=JSONResponse)
 async def medicos(params=Depends(get_params)):
     if params:
-        page = int(params["page"])
+        key = "page"
+        page = int(params[key] if key in params else 0)
         page = 0 if page < 0 else page
         dados = db.get_medicos_paged(LEN_PAGE, page)
-        dados.update(pagination("medicos", page))
         return dados
     else:
         return db.get_medicos()
@@ -123,8 +123,9 @@ async def medico(id: int):
 @app.post("/api/medicos", response_class=JSONResponse)
 async def add_medico(body=Depends(get_body)):
     if is_valid(body, 15):
+        nome = body["nome"]
         db.add_medico(body)
-        dados = db.get_medicos()
+        dados = db.get_medicos_position(nome, LEN_PAGE)
         return dados
     else:
         raise HTTPException(status_code=422, detail=ERR_MSG)
@@ -141,7 +142,8 @@ async def get_medicos(body=Depends(get_body)):
 async def update_medico(id: int, body=Depends(get_body)):
     if is_valid(body, 15):
         db.update_medico(id, body)
-        dados = db.get_medicos()
+        nome = body["nome"]
+        dados = db.get_medicos_position(nome, LEN_PAGE)
         return dados
     else:
         raise HTTPException(status_code=422, detail=ERR_MSG)
@@ -209,7 +211,8 @@ def db_reset():
 
 # ----------------------------------------------------------------------------------
 def is_valid(body: dict, qtd: int):
-    return sum([1 if v else 0 for _, v in body.items()]) == qtd
+    fields = sum([1 if v else 0 for _, v in body.items()])
+    return fields == qtd
 
 
 def fragment(frag):
@@ -224,23 +227,3 @@ def fragment_format(dados, frag):
         return html
     else:
         raise HTTPException(status_code=404)
-
-
-def pagination(tbl, page=0):
-    total_pages = (db.count(tbl) - 1) // LEN_PAGE
-
-    pages = {}
-
-    if total_pages > 0:
-        pages = {
-            "pagination": {
-                "first_page": page == 0,
-                "alias_first_page": "first_page" if page == 0 else "",
-                "previous_page": page - 1 if page > 1 else 0,
-                "next_page": page + 1 if page < total_pages else page,
-                "alias_last_page": "last_page" if page >= total_pages else "",
-                "last_pages": page >= total_pages,
-                "total_pages": total_pages,
-            }
-        }
-    return pages

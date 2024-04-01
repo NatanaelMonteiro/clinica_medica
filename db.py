@@ -1,44 +1,54 @@
 import connection
 
+TBL_MEDICOS = "medicos"
+TBL_PACIENTES = "pacientes"
 con, cur = connection.get()
 
 
 def get_medicos():
-    return get_dados("medicos")
+    return get_dados(TBL_MEDICOS)
 
 
 def get_medicos_paged(len_page, page=0):
-    return get_dados_paged("medicos", len_page, page)
+    dados = get_dados_paged(TBL_MEDICOS, len_page, page)
+    dados.update(pagination(TBL_MEDICOS, len_page, page))
+    return dados
+
+
+def get_medicos_position(nome, len_page):
+    page = get_page(TBL_MEDICOS, nome, len_page)
+    dados = get_medicos_paged(len_page, page)
+    return dados
 
 
 def get_medico(id):
-    return get_dados("medicos", id)
+    return get_dados(TBL_MEDICOS, id)
 
 
 def add_medico(new_medico: dict):
-    add("medicos", new_medico)
+    add(TBL_MEDICOS, new_medico)
 
 
 def get_pacientes():
-    return get_dados("pacientes")
+    return get_dados(TBL_PACIENTES)
 
 
 def get_paciente(id):
-    return get_dados("pacientes", id)
+    return get_dados(TBL_PACIENTES, id)
 
 
 def add_paciente(new_paciente: dict):
-    add("pacientes", new_paciente)
+    add(TBL_PACIENTES, new_paciente)
 
 
 def update_paciente(id, updated: dict):
     paciente = get_paciente(id)
-    update(id, "pacientes", paciente, updated)
+    update(id, TBL_PACIENTES, paciente, updated)
 
 
 def update_medico(id, updated: dict):
     medico = get_medico(id)
-    update(id, "medicos", medico, updated)
+    update(id, TBL_MEDICOS, medico, updated)
 
 
 def add(table, dados: dict):
@@ -46,10 +56,9 @@ def add(table, dados: dict):
         values = [f"'{v}'" for _, v in dados.items()]
         all_values = ",".join(values)
 
-        fields = [f"'{k}'" for k, _ in dados.items()]
+        fields = [f"{k}" for k, _ in dados.items()]
         all_fields = ",".join(fields)
 
-        # FIX: Resolver com Strategy futuramente
         if connection.DB_TYPE == connection.TYPE_PSQL:
             sql = (
                 f"INSERT INTO {table} (id, {all_fields}) values (DEFAULT, {all_values})"
@@ -94,11 +103,11 @@ def get_dados_paged(tbl, len_page=0, page=-1):
 
 
 def search_medicos(param):
-    return search("medicos", param)
+    return search(TBL_MEDICOS, param)
 
 
 def search_pacientes(param):
-    return search("pacientes", param)
+    return search(TBL_PACIENTES, param)
 
 
 def search(tbl, param):
@@ -114,11 +123,11 @@ def search(tbl, param):
 
 
 def del_medico(id):
-    delete("medicos", id)
+    delete(TBL_MEDICOS, id)
 
 
 def del_paciente(id):
-    delete("pacientes", id)
+    delete(TBL_PACIENTES, id)
 
 
 def delete(tbl, id):
@@ -131,3 +140,33 @@ def count(tbl):
     sql = f"SELECT COUNT(*) AS total FROM {tbl}"
     cur.execute(sql)
     return cur.fetchone()["total"]
+
+
+def get_page(tbl, nome, len_page):
+    sql = f"SELECT COUNT(*) as total FROM {tbl} WHERE UPPER(nome) < '{nome}'"
+    cur.execute(sql)
+    position = cur.fetchone()["total"]
+    return position // len_page
+
+
+def pagination(tbl, len_page=0, page=0):
+    total_rows = count(tbl) - 1
+    total_pages = (total_rows // len_page) if len_page > 0 else 0
+
+    if total_pages > 0:
+        pages = {
+            "this_page": page,
+            "pagination": {
+                "first_page": page == 0,
+                "alias_first_page": "first_page" if page == 0 else "",
+                "previous_page": page - 1 if page > 1 else 0,
+                "next_page": page + 1 if page < total_pages else page,
+                "alias_last_page": "last_page" if page >= total_pages else "",
+                "last_pages": page >= total_pages,
+                "total_pages": total_pages,
+            },
+        }
+    else:
+        pages = {"this_page": page}
+
+    return pages
