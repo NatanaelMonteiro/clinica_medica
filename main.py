@@ -133,8 +133,14 @@ async def add_medico(body=Depends(get_body)):
 
 @app.post("/api/medicos/search", response_class=JSONResponse)
 async def get_medicos(body=Depends(get_body)):
-    busca = body["search"]
-    dados = db.get_medicos() if len(busca) < 2 else db.search_medicos(busca)
+    key = "search"
+    search = body[key] if key in body else ""
+
+    if len(search) > 1:
+        dados = db.search_medicos(search)
+    else:
+        dados = db.get_medicos_paged(LEN_PAGE)
+
     return dados
 
 
