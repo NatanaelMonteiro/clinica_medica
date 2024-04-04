@@ -33,6 +33,18 @@ def get_pacientes():
     return get_dados(TBL_PACIENTES)
 
 
+def get_pacientes_paged(len_page, page=0):
+    dados = get_dados_paged(TBL_PACIENTES, len_page, page)
+    dados.update(pagination(TBL_PACIENTES, len_page, page))
+    return dados
+
+
+def get_pacientes_position(nome, len_page):
+    page = get_page(TBL_PACIENTES, nome, len_page)
+    dados = get_pacientes_paged(len_page, page)
+    return dados
+
+
 def get_paciente(id):
     return get_dados(TBL_PACIENTES, id)
 
@@ -109,7 +121,9 @@ def search_medicos(param):
 
 
 def search_pacientes(param):
-    return search(TBL_PACIENTES, param)
+    dados = search(TBL_PACIENTES, param)
+    dados.update(pagination(TBL_PACIENTES))
+    return dados
 
 
 def search(tbl, param):

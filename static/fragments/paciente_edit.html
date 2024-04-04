@@ -2,7 +2,7 @@
     <div class="info animate__animated animate__faster animate__fadeInUp">
         <div class="close">
             <h3> Editar Cadastro do Paciente </h3>
-            <a onclick="closeDialog('dialog')" hx-get="/api/pacientes" hx-swap="outerHTML" hx-target="#dialog">
+            <a onclick="closeDialog('dialog')">
                 <i class="material-symbols-outlined">close</i>
             </a>
         </div>
@@ -13,7 +13,7 @@
                     <td data-th="Nome"><input name="nome" value="{nome}"></td>
                     <td data-th="RG"><input name="rg" onkeyup="rgMask(this)" value="{rg}"></td>
                     <td data-th="CPF"><input name="cpf" onkeyup="cpfMask(this)" value="{cpf}"></td>
-                    <td data-th="Data nascimento"><input name="dt_nasc" value="{dt_nasc}"></td>
+                    <td data-th="Data nascimento"><input name="dt_nasc" onkeyup="dtMask(this)" value="{dt_nasc}"></td>
                     <td data-th="Telefone"><input name="telefone" onkeyup="phoneMask(this)" value="{telefone}"></td>
                     <td data-th="E-mail"><input name="email" value="{email}"></td>
                     <td data-th="Sexo">
@@ -23,54 +23,25 @@
                             <option value="masculino">Masculino</option>
                         </select>
                     </td>
-                    <td data-th="Peso"><input name="peso" value="{peso}"></td>
-                    <td data-th="Altura"><input name="altura" value="{altura}"></td>
-                    <td data-th="Tipo Sanguineo">
-                        <select id="tp_sanguineo" name="tp_sanguineo">
-                            <option value="" selected disabled hidden>Selecione o tipo sanguineo</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
+                    <td data-th="Peso"><input name="peso" onkeyup="pesoMask(this)" value="{peso}"></td>
+                    <td data-th="Altura"><input name="altura" onkeyup="altMask(this)" value="{altura}"></td>
+                    <td data-th="Tipo sanguíneo">
+                        <select id="tp_sanguineo" name="tp_sanguineo"></select>
+                    </td>
+                    <td data-th="CEP">
+                        <input name="cep" onkeyup="cepMask(this)" onblur="getAddress(value)" value="{cep}">
+                    </td>
+                    <td data-th="UF">
+                        <select id="uf" name="uf" onchange="selCidades(value)"></select>
+                    </td>
+                    <td data-th="Cidade">
+                        <select id="cidade" name="cidade" onmousedown="this.size=5" onchange="this.size=0"
+                            onblur="this.size=0">
                         </select>
                     </td>
-                    <td data-th="Estado">
-                        <select id="uf" name="uf">
-                            <option value="" selected disabled hidden>Selecione o estado</option>
-                            <option value="AC">AC</option>
-                            <option value="AL">AL</option>
-                            <option value="AM">AM</option>
-                            <option value="AP">AP</option>
-                            <option value="BA">BA</option>
-                            <option value="CE">CE</option>
-                            <option value="DF">DF</option>
-                            <option value="ES">ES</option>
-                            <option value="GO">GO</option>
-                            <option value="MA">MA</option>
-                            <option value="MG">MG</option>
-                            <option value="MT">MT</option>
-                            <option value="MS">MS</option>
-                            <option value="PA">PA</option>
-                            <option value="PB">PB</option>
-                            <option value="PE">PE</option>
-                            <option value="PI">PI</option>
-                            <option value="PR">PR</option>
-                            <option value="RJ">RJ</option>
-                            <option value="RN">RN</option>
-                            <option value="RO">RO</option>
-                            <option value="RR">RR</option>
-                            <option value="RS">RS</option>
-                            <option value="SC">SC</option>
-                            <option value="SE">SE</option>
-                            <option value="SP">SP</option>
-                            <option value="TO">TO</option>
-                        </select>
+                    <td data-th="Endereço">
+                        <input id="logradouro" name="logradouro" value="{logradouro}">
                     </td>
-                    <td data-th="Cidade"><input name="cidade" value="{cidade}"></td>
-                    <td data-th="Endereço"><input name="logradouro" value="logradouro"></td>
-                    <td data-th="CEP"><input name="cep" value="cep"></td>
                     <td data-th="Situação">
                         <select id="status" name="status">
                             <option value="agendada">Agendada</option>
@@ -80,20 +51,22 @@
                     </td>
 
                     <script>defaultOption('sexo', '{sexo}')</script>
+                    <script>getTiposSangue()</script>
                     <script>defaultOption('tp_sanguineo', '{tp_sanguineo}')</script>
+                    <script>getEstados()</script>
                     <script>defaultOption('uf', '{uf}')</script>
+                    <script>selCidades('{uf}', '{cidade}')</script>
                     <script>defaultOption('status', '{status}')</script>
 
                 </tr>
             </table>
         </section>
         <div class="buttons">
-            <a class="button secondary" hx-get="/api/pacientes" title="Cancelar a alteração" hx-swap="outerHTML"
-                hx-target="#dialog">
+            <a class="button secondary" onclick="closeDialog('dialog')">
                 Cancelar
             </a>
             <a class="button" hx-trigger="click" hx-include="#dialog" hx-put="/api/pacientes/{id}" title="Salvar"
-                hx-target="#dialog" hx-swap="outerHTML">
+                hx-target="#slot_lista" hx-swap="innerHTML" mustache-array-template="paciente-template">
                 Salvar
             </a>
         </div>

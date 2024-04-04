@@ -25,6 +25,14 @@ document.addEventListener('htmx:responseError', evt => {
     showToast(error.detail);
 })
 
+document.addEventListener('htmx:beforeSwap', evt => {
+    if (evt.detail.xhr.status >= 300) {
+        evt.detail.sholdSwap = false
+        return
+    }
+    closeDialog('dialog')
+})
+
 function defaultOption(id, defaultValue) {
     let select = document.getElementById(id);
     select.value = defaultValue;
@@ -66,28 +74,37 @@ String.prototype.reverse = function () {
     return this.split('').reverse().join('');
 };
 
+
 function phoneMask(obj) {
-    mask = "(##) #####-####";
-    var fmt = format(obj.value, mask);
-    obj.value = fmt
+    obj.value = format(obj.value, "(##) #####-####");
 }
 
 function crmMask(obj) {
-    mask = "###/##";
-    var fmt = format(obj.value, mask);
-    obj.value = fmt
+    obj.value = format(obj.value, "###/##");
 }
 
 function rgMask(obj) {
-    mask = "#####/SSP-##";
-    var fmt = format(obj.value, mask);
-    obj.value = fmt
+    obj.value = format(obj.value, "#####-##");
 }
 
 function cpfMask(obj) {
-    mask = "###.###.###-##";
-    var fmt = format(obj.value, mask);
-    obj.value = fmt
+    obj.value = format(obj.value, "###.###.###-##");
+}
+
+function dtMask(obj) {
+    obj.value = format(obj.value, "##-##-####");
+}
+
+function cepMask(obj) {
+    obj.value = format(obj.value, "#####-###");
+}
+
+function altMask(obj) {
+    obj.value = format(obj.value, "###");
+}
+
+function pesoMask(obj) {
+    obj.value = format(obj.value, "###");
 }
 
 function format(value, mask) {
@@ -108,4 +125,90 @@ function format(value, mask) {
         x++;
     }
     return resultado.reverse();
+}
+
+function getEstados() {
+    const elm = document.getElementById('uf');
+
+    const estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF',
+        'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB',
+        'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR',
+        'SC', 'SP', 'SE', 'TO']
+
+    for (const i in estados) {
+        var opt = document.createElement('option');
+        opt.value = estados[i];
+        opt.innerHTML = estados[i];
+        elm.appendChild(opt);
+    }
+}
+function selCidades(uf, default_value) {
+    if (uf == "") return;
+
+    const url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`;
+    const sel = document.getElementById('cidade');
+
+    sel.innerHTML = "";
+
+    fetch(url,)
+        .then(response => response.json())
+        .then(data => {
+            for (const [_, v] of data.entries()) {
+                var opt = document.createElement('option');
+                opt.value = v.nome;
+                opt.innerHTML = v.nome;
+                sel.appendChild(opt);
+            }
+
+            if (default_value) {
+                defaultOption('cidade', default_value);
+            }
+        })
+        .catch((error) => {
+            console.error('Não foi possível obter as cidades: ', error)
+        });
+}
+
+function getAddress(cep) {
+    if (cep == "") return;
+
+    cep = cep.split('-').join('')
+
+    const url = `https://brasilapi.com.br/api/cep/v1/${cep}`
+
+    getEstados()
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const cidade = data.city
+            const uf = data.state
+
+            defaultOption('uf', uf);
+            selCidades(uf, cidade)
+
+            const endereco = document.getElementById('logradouro');
+            endereco.value = `${data.street}, ${data.neighborhood}`;
+        })
+        .catch((error) => {
+            console.error('CEP não localizado: ', error);
+        });
+}
+
+function getTiposSangue() {
+    const elm = document.getElementById('tp_sanguineo');
+
+    const tipos = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+
+    for (const i in tipos) {
+        var opt = document.createElement('option');
+        opt.value = tipos[i];
+        opt.innerHTML = tipos[i];
+        elm.appendChild(opt);
+    }
+}
+
+function defaultOption(id, defaultValue) {
+    const select = document.getElementById(id);
+    select.value = defaultValue;
 }

@@ -56,9 +56,15 @@ async def api():
 
 # PACIENTES-------------------------------------------------------
 @app.get("/api/pacientes", response_class=JSONResponse)
-async def pacientes():
-    dados = db.get_pacientes()
-    # time.sleep(1)
+async def pacientes(params=Depends(get_params)):
+    if params:
+        key = "page"
+        page = int(params[key] if key in params else 0)
+        page = 0 if page < 0 else page
+        dados = db.get_pacientes_paged(LEN_PAGE, page)
+    else:
+        dados = db.get_pacientes_paged(LEN_PAGE)
+
     return dados
 
 
@@ -71,8 +77,9 @@ async def paciente(id: int):
 @app.post("/api/pacientes", response_class=JSONResponse)
 async def add_paciente(body=Depends(get_body)):
     if is_valid(body, 15):
+        nome = body["nome"]
         db.add_paciente(body)
-        dados = db.get_pacientes()
+        dados = db.get_pacientes_position(nome, LEN_PAGE)
         return dados
     else:
         raise HTTPException(status_code=422, detail=ERR_MSG)
@@ -80,8 +87,14 @@ async def add_paciente(body=Depends(get_body)):
 
 @app.post("/api/pacientes/search", response_class=JSONResponse)
 async def get_pacientes(body=Depends(get_body)):
-    search = body["search"]
-    dados = db.get_pacientes() if len(search) < 2 else db.search_pacientes(search)
+    key = "search"
+    search = body[key] if key in body else ""
+
+    if len(search) > 1:
+        dados = db.search_pacientes(search)
+    else:
+        dados = db.get_pacientes_paged(LEN_PAGE)
+
     return dados
 
 
@@ -89,7 +102,8 @@ async def get_pacientes(body=Depends(get_body)):
 async def update_paciente(id: int, body=Depends(get_body)):
     if is_valid(body, 15):
         db.update_paciente(id, body)
-        dados = db.get_pacientes()
+        nome = body["nome"]
+        dados = db.get_pacientes_position(nome, LEN_PAGE)
         return dados
     else:
         raise HTTPException(status_code=422, detail=ERR_MSG)
@@ -109,9 +123,10 @@ async def medicos(params=Depends(get_params)):
         page = int(params[key] if key in params else 0)
         page = 0 if page < 0 else page
         dados = db.get_medicos_paged(LEN_PAGE, page)
-        return dados
     else:
-        return db.get_medicos()
+        dados = db.get_medicos_paged(LEN_PAGE)
+
+    return dados
 
 
 @app.get("/api/medicos/{id}", response_class=JSONResponse)

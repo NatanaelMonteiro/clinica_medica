@@ -2,7 +2,7 @@
     <div class="info animate__animated animate__faster animate__fadeInUp">
         <div class="close">
             <h3>Cadastrar Paciente</h3>
-            <a onclick="closeDialog('dialog')" hx-get="/api/pacientes" hx-swap="outerHTML" hx-target="#dialog">
+            <a onclick="closeDialog('dialog')">
                 <i class="material-symbols-outlined">close</i>
             </a>
         </div>
@@ -13,7 +13,7 @@
                     <td><input placeholder="Nome do paciente" name="nome" value=""></td>
                     <td><input placeholder="RG" onkeyup="rgMask(this)" name="rg" value=""></td>
                     <td><input placeholder="CPF" onkeyup="cpfMask(this)" name="cpf" value=""></td>
-                    <td><input placeholder="Data de nascimento" name="dt_nasc" value=""></td>
+                    <td><input placeholder="Data de nascimento" name="dt_nasc" onkeyup="dtMask(this)" value=""></td>
                     <td><input placeholder="Telefone do paciente" onkeyup="phoneMask(this)" name="telefone" value="">
                     <td><input placeholder="E-mail do paciente" name="email" value=""></td>
                     <td>
@@ -23,54 +23,32 @@
                             <option value="masculino">Masculino</option>
                         </select>
                     </td>
-                    <td><input placeholder="Peso" name="peso" value=""></td>
-                    <td><input placeholder="Altura" name="altura" value=""></td>
+                    <td><input placeholder="Peso" name="peso" onkeyup="pesoMask(this)" value=""></td>
+                    <td><input placeholder="Altura" name="altura" onkeyup="altMask(this)" value=""></td>
                     <td>
-                        <select name="tp_sanguineo" required>
-                            <option value="" selected disabled hidden>Selecione o tipo sanguineo</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
+                        <select id="tp_sanguineo" name="tp_sanguineo" required>
+                            <option value="">Selecione o tipo saguíneo</option>
                         </select>
                     </td>
                     <td>
-                        <select name="UF" required>
-                            <option value="" selected disabled hidden>Selecione o estado</option>
-                            <option value="AC">AC</option>
-                            <option value="AL">AL</option>
-                            <option value="AM">AM</option>
-                            <option value="AP">AP</option>
-                            <option value="BA">BA</option>
-                            <option value="CE">CE</option>
-                            <option value="DF">DF</option>
-                            <option value="ES">ES</option>
-                            <option value="GO">GO</option>
-                            <option value="MA">MA</option>
-                            <option value="MG">MG</option>
-                            <option value="MT">MT</option>
-                            <option value="MS">MS</option>
-                            <option value="PA">PA</option>
-                            <option value="PB">PB</option>
-                            <option value="PE">PE</option>
-                            <option value="PI">PI</option>
-                            <option value="PR">PR</option>
-                            <option value="RJ">RJ</option>
-                            <option value="RN">RN</option>
-                            <option value="RO">RO</option>
-                            <option value="RR">RR</option>
-                            <option value="RS">RS</option>
-                            <option value="SC">SC</option>
-                            <option value="SE">SE</option>
-                            <option value="SP">SP</option>
-                            <option value="TO">TO</option>
+                        <input placeholder="CEP" name="cep" onkeyup="cepMask(this)" onblur="getAddress(value)" value="">
+                    </td>
+
+                    <td>
+                        <select id="uf" name="uf" onchange="selCidades(value)" required>
+                            <option value="">Selecione a UF</option>
                         </select>
                     </td>
-                    <td><input placeholder="Cidade" name="cidade" value=""></td>
-                    <td><input placeholder="Endereço" name="logradouro" value=""></td>
-                    <td><input placeholder="CEP" name="cep" value=""></td>
+
+                    <td>
+                        <select id="cidade" name="cidade" onmousedown="if(this.options.length>10){this.size=5}"
+                            onchange="this.size=0" onblur="this.size=0" required>
+                            <option value="">Selecione a UF primeiro</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input id="logradouro" name="logradouro" placeholder="Rua, número, apto" value="">
+                    </td>
                     <td>
                         <select name="status" required>
                             <option value="" selected hidden>Selecione</option>
@@ -83,14 +61,16 @@
             </table>
         </section>
 
+        <script>getEstados()</script>
+        <script>getTiposSangue()</script>
+
         <div class="buttons">
-            <a class="button secondary" hx-get="/api/pacientes" title="Cancelar a alteração" hx-swap="outerHTML"
-                hx-target="#dialog">
+            <a class="button secondary" onclick="closeDialog('dialog')">
                 Cancelar
             </a>
 
-            <a class="button" hx-trigger="click" hx-include="#dialog" hx-post="/api/pacientes" title="Salvar"
-                hx-target="#dialog" hx-swap="outerHTML">
+            <a class="button" hx-trigger="click" hx-include="#dialog" hx-post="/api/pacientes" hx-target="#slot_lista"
+                hx-swap="innerHTML" mustache-array-template="medico-template">
                 Salvar
             </a>
         </div>

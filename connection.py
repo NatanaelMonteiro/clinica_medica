@@ -6,7 +6,7 @@ TYPE_PSQL = "psql"
 TYPE_SQLITE = "sqlite"
 TYPE_MYSQL = "mysql"
 
-DB_TYPE = TYPE_PSQL
+DB_TYPE = TYPE_SQLITE
 
 
 def get():
