@@ -1,8 +1,59 @@
+import bcrypt
 import connection
 
 TBL_MEDICOS = "medicos"
 TBL_PACIENTES = "pacientes"
+TBL_CONSULTAS = "consultas"
+TBL_USUARIOS = "usuarios"
+
 con, cur = connection.get()
+
+
+def get_usuarios():
+    return get_dados(TBL_USUARIOS)
+
+
+def is_usuario(body):
+    senha = str.encode(body["senha"])
+    dados = get_usuario(TBL_USUARIOS, body)
+    if dados:
+        senha_crypt = str.encode(dados[0]["senha"])
+        return bcrypt.checkpw(senha, senha_crypt)
+    else:
+        return False
+
+
+def get_pacientes():
+    return get_dados(TBL_PACIENTES)
+
+
+def get_pacientes_paged(len_page, page=0):
+    dados = get_dados_paged(TBL_PACIENTES, len_page, page)
+    dados.update(pagination(TBL_PACIENTES, len_page, page))
+    return dados
+
+
+def get_paciente_position(nome, len_page):
+    page = get_page(TBL_PACIENTES, nome, len_page)
+    dados = get_pacientes_paged(len_page, page)
+    return dados
+
+
+def get_paciente(id):
+    return get_dados(TBL_PACIENTES, id)
+
+
+def add_paciente(new_paciente):
+    add(TBL_PACIENTES, new_paciente)
+
+
+def update_paciente(id, updated):
+    paciente = get_paciente(id)
+    update(id, TBL_PACIENTES, paciente, updated)
+
+
+def del_paciente(id):
+    delete(TBL_PACIENTES, id)
 
 
 def get_medicos():
@@ -15,7 +66,7 @@ def get_medicos_paged(len_page, page=0):
     return dados
 
 
-def get_medicos_position(nome, len_page):
+def get_medico_position(nome, len_page):
     page = get_page(TBL_MEDICOS, nome, len_page)
     dados = get_medicos_paged(len_page, page)
     return dados
@@ -29,38 +80,119 @@ def add_medico(new_medico: dict):
     add(TBL_MEDICOS, new_medico)
 
 
-def get_pacientes():
-    return get_dados(TBL_PACIENTES)
-
-
-def get_pacientes_paged(len_page, page=0):
-    dados = get_dados_paged(TBL_PACIENTES, len_page, page)
-    dados.update(pagination(TBL_PACIENTES, len_page, page))
-    return dados
-
-
-def get_pacientes_position(nome, len_page):
-    page = get_page(TBL_PACIENTES, nome, len_page)
-    dados = get_pacientes_paged(len_page, page)
-    return dados
-
-
-def get_paciente(id):
-    return get_dados(TBL_PACIENTES, id)
-
-
-def add_paciente(new_paciente: dict):
-    add(TBL_PACIENTES, new_paciente)
-
-
-def update_paciente(id, updated: dict):
-    paciente = get_paciente(id)
-    update(id, TBL_PACIENTES, paciente, updated)
-
-
-def update_medico(id, updated: dict):
+def update_medico(id, updated):
     medico = get_medico(id)
     update(id, TBL_MEDICOS, medico, updated)
+
+
+def del_medico(id):
+    delete(TBL_MEDICOS, id)
+
+
+def get_consultas(tp_order=0, is_agendadas=False):
+    return get_dados_consultas(tp_order, is_agendadas)
+
+
+def get_consulta(id):
+    return get_dados_consultas(id=id)
+
+
+def add_consulta(new_consulta):
+    add(TBL_CONSULTAS, new_consulta)
+
+
+def close_consulta(id):
+    set_status(TBL_CONSULTAS, "concluída", id)
+
+
+def del_consulta(id):
+    set_status(TBL_CONSULTAS, "cancelada", id)
+
+
+def get_usuario(tbl, dados):
+    if dados:
+        values = [v for _, v in dados.items()]
+
+        usuario = values[0]
+        # salto = bcrypt.gensalt(12)
+        # senha = values[1]
+        # senha = bcrypt.hashpw(str.encode(senha), salto)
+
+        sql = f"SELECT * FROM {tbl}"
+        sql += f" WHERE usuario='{usuario}'"
+
+        cur.execute(sql)
+        rows = cur.fetchall()
+        dados = [dict(row) for row in rows]
+
+        return dados
+    else:
+        return {}
+
+
+def get_dados(tbl, id=None):
+    sql = f"SELECT * FROM {tbl}"
+    sql += f" WHERE id={id}" if id else ""
+    sql += " ORDER BY nome"
+
+    cur.execute(sql)
+    rows = cur.fetchall()
+    dados = [dict(row) for row in rows]
+
+    return dados
+
+
+def get_dados_paged(tbl, len_page=0, page=-1):
+    sql = f"SELECT * FROM {tbl} ORDER BY nome"
+    sql += f" LIMIT {len_page} OFFSET {page * len_page}" if page >= 0 else ""
+    cur.execute(sql)
+    rows = cur.fetchall()
+    dados = [dict(row) for row in rows]
+    return dict({"info": dados})
+
+
+def search_medicos(param):
+    dados = search(TBL_MEDICOS, param)
+    dados.update(pagination(TBL_MEDICOS))
+    return dados
+
+
+def search_pacientes(param):
+    return search(TBL_PACIENTES, param)
+
+
+def search(tbl, param):
+    sql = f"SELECT * FROM {tbl}"
+    sql += f" WHERE UPPER(nome) LIKE '%{param.upper()}%'"
+    sql += f" OR cpf LIKE '{param}%'"
+    sql += " ORDER BY nome"
+    cur.execute(sql)
+    rows = cur.fetchall()
+    dados = [dict(row) for row in rows]
+    return dict({"info": dados})
+
+
+def get_dados_consultas(tp_order=0, is_agendadas=False, id=None):
+    ORDER = [
+        "p.nome, dt_consulta, hr_consulta",
+        "nm_medico, status, dt_consulta, hr_consulta",
+        "dt_consulta desc, hr_consulta, nm_medico",
+        "status, dt_consulta, hr_consulta, p.nome",
+    ]
+
+    sql = "SELECT c.*, m.nome AS nm_medico, m.especialidade, p.nome AS nm_paciente, p.telefone"
+    sql += " FROM consultas AS c"
+    sql += " INNER JOIN medicos AS m ON (m.id = c.id_medico)"
+    sql += " INNER JOIN pacientes AS p ON (p.id = c.id_paciente)"
+    sql += f" WHERE id={id}" if id else ""
+    sql += f" AND c.status='agendada'" if is_agendadas else ""
+    sql += f" ORDER BY {ORDER[tp_order]}"
+
+    cur.execute(sql)
+    rows = cur.fetchall()
+    dados = [dict(row) for row in rows]
+
+    return dados
 
 
 def add(table, dados: dict):
@@ -83,6 +215,7 @@ def add(table, dados: dict):
 
 
 def update(id, table, outdated: dict, updated: dict):
+
     if outdated:
         dados = outdated[0]
         dados.update(updated)
@@ -95,55 +228,10 @@ def update(id, table, outdated: dict, updated: dict):
         con.commit()
 
 
-def get_dados(tbl, id=None):
-    sql = f"SELECT * FROM {tbl}"
-    sql += f" WHERE id={id}" if id else ""
-    sql += " ORDER BY nome"
+def set_status(tbl, status, id):
+    sql = f"UPDATE {tbl} SET status='{status}' WHERE id={id}"
     cur.execute(sql)
-    rows = cur.fetchall()
-    dados = [dict(row) for row in rows]
-    return dados
-
-
-def get_dados_paged(tbl, len_page=0, page=-1):
-    sql = f"SELECT * FROM {tbl} ORDER BY nome"
-    sql += f" LIMIT {len_page} OFFSET {page * len_page}" if page >= 0 else ""
-    cur.execute(sql)
-    rows = cur.fetchall()
-    dados = [dict(row) for row in rows]
-    return dict({"info": dados})
-
-
-def search_medicos(param):
-    dados = search(TBL_MEDICOS, param)
-    dados.update(pagination(TBL_MEDICOS))
-    return dados
-
-
-def search_pacientes(param):
-    dados = search(TBL_PACIENTES, param)
-    dados.update(pagination(TBL_PACIENTES))
-    return dados
-
-
-def search(tbl, param):
-
-    sql = f"SELECT * FROM {tbl}"
-    sql += f" WHERE UPPER(nome) LIKE '%{param.upper()}%'"
-    sql += f" OR cpf LIKE '{param}%'"
-    sql += " ORDER BY nome"
-    cur.execute(sql)
-    rows = cur.fetchall()
-    dados = [dict(row) for row in rows]
-    return dict({"info": dados})
-
-
-def del_medico(id):
-    delete(TBL_MEDICOS, id)
-
-
-def del_paciente(id):
-    delete(TBL_PACIENTES, id)
+    con.commit()
 
 
 def delete(tbl, id):
@@ -178,7 +266,7 @@ def pagination(tbl, len_page=0, page=0):
                 "previous_page": page - 1 if page > 1 else 0,
                 "next_page": page + 1 if page < total_pages else page,
                 "alias_last_page": "last_page" if page >= total_pages else "",
-                "last_pages": page >= total_pages,
+                "last_page": page >= total_pages,
                 "total_pages": total_pages,
             },
         }

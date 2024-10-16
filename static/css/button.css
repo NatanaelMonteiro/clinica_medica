@@ -24,6 +24,10 @@ a.button {
     text-decoration: none;
 }
 
+tr:has(.nav-buttons):hover {
+    background-color: unset;
+}
+
 td:has(button) {
     border: none;
 }
@@ -31,9 +35,11 @@ td:has(button) {
 button:hover,
 a.button:hover {
     box-shadow: 4px 4px 10px rgba(128, 128, 128, 0.4);
+    cursor: pointer;
 }
 
-button.mini {
+button.mini,
+a.button.mini {
     height: 1.9em;
     width: 13em;
     font-size: 0.75rem;

@@ -8,17 +8,21 @@
 
 :root {
     --bg-primary: #d9d9d9;
-    --bg-menu: rgba(217, 217, 217, 0.1);
+    --bg-header: rgba(217, 217, 217, 0.1);
+    --bg-menu: rgba(114, 114, 114, 0.1);
     --bg-secondary: #cfcfcf;
     --btn-primary: #c3ffb4;
     --secondary: #959595;
     --soft-color: #afafaa;
     --font-primary: #7d7d7d;
     --font-secondary: #dadada;
+    --link-hover: #789e6f;
+    --success: #789e6f;
     --warning: #b4293e;
+    --disabled: #afafaa;
+    --hover-color: rgba(128, 128, 128, 0.2);
     --animate-duration: 1.5s;
     --border-radius: 7px;
-    --hover-color: rgba(128, 128, 128, 0.4);
 }
 
 * {
@@ -39,9 +43,14 @@ body {
     display: flex;
     position: fixed;
     width: 100vw;
-    padding: 20px 20px 0;
-    background-color: var(--bg-menu);
+    padding: 20px 20px 10px;
+    background-color: var(--bg-header);
     backdrop-filter: blur(5px);
+    z-index: 10000;
+}
+
+.material-symbols-outlined {
+    line-height: unset;
 }
 
 .header .material-symbols-outlined {
@@ -65,6 +74,11 @@ body {
     background-color: var(--secondary) !important;
 }
 
+.bg-warning {
+    color: var(--font-secondary) !important;
+    background-color: var(--warning) !important;
+}
+
 .warning {
     color: var(--warning);
     font-weight: 500;
@@ -82,6 +96,12 @@ body {
 .center {
     display: flex;
     justify-content: center;
+}
+
+.g-1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .w-100 {
@@ -143,8 +163,11 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    margin: auto;
     gap: 20px;
+}
+
+.dados {
+    margin: auto;
 }
 
 ::placeholder {
@@ -153,7 +176,8 @@ body {
     opacity: 0.5;
 }
 
-select:invalid {
+select:invalid,
+input[type="date"]:invalid {
     /* placeholder do select, precisa que o select seja required */
     color: rgba(0, 0, 0, 0.3);
     font-weight: 100;
@@ -169,11 +193,13 @@ input {
 }
 
 input:focus-visible,
-select:focus-visible {
+select:focus-visible,
+textarea:focus-visible {
     outline: var(--soft-color) solid 2px;
 }
 
-select {
+select,
+textarea {
     width: 100%;
     height: 2.5em;
     line-height: 2.5em;
@@ -181,8 +207,26 @@ select {
     border-radius: var(--border-radius);
 }
 
+textarea {
+    padding: 5px 15px;
+    font-size: 1em;
+}
+
+select option:hover {
+    box-shadow: 0 0 10px 100px var(--bg-secondary) inset;
+}
+
+select option:checked {
+    color: #fff;
+    box-shadow: 0 0 10px 100px var(--bg-secondary) inset;
+}
+
 a:hover {
     cursor: pointer;
+}
+
+i:hover {
+    color: var(--link-hover);
 }
 
 select,
@@ -190,8 +234,18 @@ input {
     outline: none;
 }
 
+input[type="date"] {
+    font-size: 1.2rem;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    font-size: 1.5em;
+    background-image: url('../icons/calendar.svg');
+}
+
 select:hover,
-input:hover {
+input:hover,
+textarea:hover {
     box-shadow: 4px 4px 10px var(--hover-color);
 }
 
@@ -224,9 +278,14 @@ table.form td[data-th]:before {
     font-weight: 600;
 }
 
+tbody tr:hover {
+    background-color: var(--hover-color);
+}
+
 tr {
     padding: 0;
     vertical-align: middle;
+    line-height: 1.5;
 }
 
 td.icon {
@@ -238,7 +297,6 @@ td.icon div {
     flex-wrap: nowrap;
     justify-content: space-evenly;
     align-items: center;
-    padding: 10px;
     gap: 15px;
 }
 
@@ -248,6 +306,11 @@ td {
     text-align: left;
     border-bottom: 1px solid var(--secondary);
     vertical-align: middle;
+}
+
+td.center {
+    display: table-cell;
+    text-align: center !important;
 }
 
 td>input,
@@ -317,7 +380,7 @@ th {
     .w-3,
     .w-5,
     .w-100 {
-        width: 100%;
+        width: 100% !important;
     }
 
     div.icon {
@@ -341,7 +404,8 @@ th {
     }
 
     td:before {
-        content: attr(data-th) ": ";
+        float: left;
+        content: attr(data-th) ":\00A0";
         font-weight: 600;
     }
 

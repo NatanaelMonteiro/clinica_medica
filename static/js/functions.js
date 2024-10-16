@@ -1,41 +1,64 @@
-document.addEventListener(
-    "htmx:confirm",
-    function (evt) {
-        if (evt.detail.question !== null) {
-            evt.preventDefault();
-            Swal.fire({
-                // animation: false,
-                buttonsStyling: false,
-                showCancelButton: true,
-                reverseButtons: true,
-                // icon: 'question',
-                title: 'Favor confirmar!',
-                text: `Deseja mesmo excluir o cadastro de ${(evt.detail.question).toUpperCase()}?`,
-                showClass: { popup: 'animate__animated animate__fadeInUp animate__faster' },
-                hideClass: { popup: 'animate__animated animate__zoomOut animate__faster' },
-            }).then(function (res) {
-                if (res.isConfirmed) evt.detail.issueRequest(true)
-            })
-        }
-    }
-);
-
 document.addEventListener('htmx:responseError', evt => {
     const error = JSON.parse(evt.detail.xhr.responseText);
     showToast(error.detail);
 })
 
-document.addEventListener('htmx:beforeSwap', evt => {
-    if (evt.detail.xhr.status >= 300) {
-        evt.detail.sholdSwap = false
-        return
-    }
-    closeDialog('dialog')
-})
+let cadastros = document.getElementById('slot-lista');
 
-function defaultOption(id, defaultValue) {
-    let select = document.getElementById(id);
-    select.value = defaultValue;
+if (cadastros != null) {
+    cadastros.msg = 'Deseja mesmo excluir o cadastro de ';
+    cadastros.addEventListener("htmx:confirm", confirm, false);
+
+    cadastros.addEventListener('htmx:beforeSwap', evt => {
+        if (evt.detail.xhr.status >= 300) {
+            evt.detail.shouldSwap = false
+            return
+        }
+        closeDialog('dialog')
+    })
+}
+
+var agendadas = document.getElementById('slot-agendadas');
+
+if (agendadas != null) {
+    agendadas.msg = 'Deseja registrar o encerramento da consulta de ';
+    agendadas.addEventListener("htmx:confirm", confirm, false);
+
+    agendadas.addEventListener('htmx:beforeSwap', evt => {
+        if (evt.detail.xhr.status >= 300) {
+            evt.detail.shouldSwap = false
+            return
+        }
+        closeDialog('dialog')
+    })
+}
+
+let cancelamentos = document.getElementById('slot-cancelamento');
+
+if (cancelamentos != null) {
+    cancelamentos.msg = 'Deseja mesmo cancelar o agendamento da consulta de ';
+    cancelamentos.addEventListener("htmx:confirm", confirm, false);
+}
+
+function confirm(evt) {
+    if (evt.detail.question !== null) {
+        var msg = evt.currentTarget.msg;
+
+        evt.preventDefault();
+        var msg = `${msg} ${(evt.detail.question).toUpperCase()}?`
+
+        Swal.fire({
+            buttonsStyling: false,
+            showCancelButton: true,
+            reverseButtons: true,
+            title: 'Confirme, por favor!',
+            text: msg,
+            showClass: { popup: 'animate__animated animate__fadeInUp animate__faster' },
+            hideClass: { popup: 'animate__animated animate__zoomOut animate__faster' },
+        }).then(function (res) {
+            if (res.isConfirmed) evt.detail.issueRequest(true)
+        })
+    }
 }
 
 function showToast(msg) {
@@ -54,9 +77,12 @@ function showDialog(id) {
 
 function closeDialog(id) {
     const dialog = document.getElementById(id);
-    const info = document.querySelector('.info');
-    dialog.classList.remove('show');
-    info.classList.remove('animate__fadeInUp');
+
+    if (dialog != null) {
+        const info = document.querySelector('.info');
+        dialog.classList.remove('show');
+        info.classList.remove('animate__fadeInUp');
+    }
 }
 
 function allowsEditing(obj) {
@@ -74,24 +100,15 @@ String.prototype.reverse = function () {
     return this.split('').reverse().join('');
 };
 
-
 function phoneMask(obj) {
     obj.value = format(obj.value, "(##) #####-####");
-}
-
-function crmMask(obj) {
-    obj.value = format(obj.value, "###/##");
-}
-
-function rgMask(obj) {
-    obj.value = format(obj.value, "#####-##");
 }
 
 function cpfMask(obj) {
     obj.value = format(obj.value, "###.###.###-##");
 }
 
-function dtMask(obj) {
+function dateMask(obj) {
     obj.value = format(obj.value, "##-##-####");
 }
 
@@ -99,32 +116,56 @@ function cepMask(obj) {
     obj.value = format(obj.value, "#####-###");
 }
 
-function altMask(obj) {
-    obj.value = format(obj.value, "###");
+function rgMask(obj) {
+    obj.value = format(obj.value, "@##############");
 }
 
-function pesoMask(obj) {
+function numMask(obj) {
     obj.value = format(obj.value, "###");
 }
 
 function format(value, mask) {
-    var resultado = "";
+    var result = '';
 
     if (value.length >= mask.length - 1) value = value.substring(0, mask.length)
-    value = value.replace(/[^\d]+/gi, '').reverse();
 
-    var mask = mask.reverse();
+    if (mask.substring(0, 1) === '#') {
+        value = value.replace(/[^\d]+/gi, '')
+    }
+
+    value = value.reverse();
+    mask = mask.reverse();
 
     for (var x = 0, y = 0; x <= mask.length && y <= value.length;) {
-        if (mask.charAt(x) != '#')
-            resultado += mask.charAt(x);
+        if (!(mask.charAt(x) === '#' || mask.charAt(x) === '@')) {
+            result += mask.charAt(x);
+        }
         else {
-            resultado += value.charAt(y);
+            result += value.charAt(y);
             y++;
         }
         x++;
     }
-    return resultado.reverse();
+    return result.reverse();
+}
+
+function menuToggle() {
+    document.querySelector('#menu').classList.toggle('show');
+    document.querySelector('.open-icon').classList.toggle('toggle');
+    document.querySelector('.close-icon').classList.toggle('toggle');
+}
+
+function getTiposSangue() {
+    const elm = document.getElementById('tp_sanguineo');
+
+    const tipos = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+
+    for (const i in tipos) {
+        var opt = document.createElement('option');
+        opt.value = tipos[i];
+        opt.innerHTML = tipos[i];
+        elm.appendChild(opt);
+    }
 }
 
 function getEstados() {
@@ -142,6 +183,7 @@ function getEstados() {
         elm.appendChild(opt);
     }
 }
+
 function selCidades(uf, default_value) {
     if (uf == "") return;
 
@@ -193,19 +235,6 @@ function getAddress(cep) {
         .catch((error) => {
             console.error('CEP não localizado: ', error);
         });
-}
-
-function getTiposSangue() {
-    const elm = document.getElementById('tp_sanguineo');
-
-    const tipos = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
-
-    for (const i in tipos) {
-        var opt = document.createElement('option');
-        opt.value = tipos[i];
-        opt.innerHTML = tipos[i];
-        elm.appendChild(opt);
-    }
 }
 
 function defaultOption(id, defaultValue) {
