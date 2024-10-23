@@ -9,15 +9,22 @@ from fastapi.responses import (
 
 import json
 
-# import time
+import datetime as dt
 import urllib.parse as html
 
 import db
 
 
-LOGIN_ERR_MSG = "Usuário ou senha inválidos!"
-ERR_MSG = "Todos os campos precisam ser preenchidos!"
 LEN_PAGE = 5
+LOGIN_ERR_MSG = "Usuário ou senha inválidos!"
+FORM_ERR_MSG = "Todos os campos precisam ser preenchidos!"
+DEL_DB_MSG = "ATENÇÃO: Todos os dados das tabelas serão excluídos."
+DT_ERR_MSG = "Por favor, informe uma data válida."
+HR_MED_ERR_MSG = "Médico indisponível nesta data/horário."
+FK_ERR_MSG = """
+        Não é permitido excluir o cadastro de 
+        Médicos ou Pacientes que tenham consultas registradas.
+    """
 
 app = FastAPI(
     title="Clínica Mentalis",
@@ -70,20 +77,14 @@ def get_info():
     return app.title
 
 
+@app.exception_handler(404)
+async def custom_404_handler(_, __):
+    return RedirectResponse("/app/404.html")
+
+
 @app.get("/api", response_class=RedirectResponse)
 async def api_root():
     return "/app/login.html"
-
-
-# @app.get("/api/capitulo", response_class=JSONResponse)
-# async def capitulo():
-#     return {"capitulo": sort_chapter()}
-
-
-# @app.get("/api/usuarios", response_class=RedirectResponse)
-# async def get_usuarios():
-#     dados = db.get_usuarios()
-#     return dados
 
 
 @app.post("/api/usuarios")
@@ -122,7 +123,7 @@ async def update_paciente(id: int, body=Depends(get_body)):
         dados = db.get_paciente_position(nome, LEN_PAGE)
         return dados
     else:
-        raise HTTPException(status_code=422, detail=ERR_MSG)
+        raise HTTPException(status_code=422, detail=FORM_ERR_MSG)
 
 
 @app.post("/api/pacientes", response_class=JSONResponse)
@@ -133,7 +134,7 @@ async def add_paciente(body=Depends(get_body)):
         dados = db.get_paciente_position(nome, LEN_PAGE)
         return dados
     else:
-        raise HTTPException(status_code=422, detail=ERR_MSG)
+        raise HTTPException(status_code=422, detail=FORM_ERR_MSG)
 
 
 @app.post("/api/pacientes/search", response_class=JSONResponse)
@@ -186,7 +187,7 @@ async def update_medico(id: int, body=Depends(get_body)):
         dados = db.get_medico_position(nome, LEN_PAGE)
         return dados
     else:
-        raise HTTPException(status_code=422, detail=ERR_MSG)
+        raise HTTPException(status_code=422, detail=FORM_ERR_MSG)
 
 
 @app.post("/api/medicos", response_class=JSONResponse)
@@ -197,7 +198,7 @@ async def add_medico(body=Depends(get_body)):
         dados = db.get_medico_position(nome, LEN_PAGE)
         return dados
     else:
-        raise HTTPException(status_code=422, detail=ERR_MSG)
+        raise HTTPException(status_code=422, detail=FORM_ERR_MSG)
 
 
 @app.post("/api/medicos/search", response_class=JSONResponse)
@@ -233,17 +234,40 @@ async def get_consultas(param=Depends(get_params)):
     return dados
 
 
-@app.post("/api/consultas", response_class=JSONResponse)
-async def add_consulta(body=Depends(get_body)):
-    body.pop("search", None)
+# @app.post("/api/consultas", response_class=JSONResponse)
+# async def add_consulta(body=Depends(get_body)):
+#     body.pop("search", None)
 
-    if is_valid(body, 4) or is_valid(body, 5):
-        body.update({"status": "agendada"})
-        db.add_consulta(body)
-        dados = db.get_consultas(tp_order=0, is_agendadas=True)
-        return dados
+#     if is_valid(body, 4) or is_valid(body, 5):
+#         body.update({"status": "agendada"})
+#         db.add_consulta(body)
+#         dados = db.get_consultas(tp_order=0, is_agendadas=True)
+#         return dados
+#     else:
+#         raise HTTPException(status_code=422, detail=ERR_MSG)
+
+
+@app.post("/api/consultas", response_class=JSONResponse)
+async def add_consulta(consulta=Depends(get_body)):
+    consulta.pop("search", None)
+
+    if is_valid(consulta, 4) or is_valid(consulta, 5):
+
+        dts = consulta["dt_consulta"]
+
+        if dts and is_valid_date(dts):
+
+            if not exists(consulta):
+                consulta.update({"status": "agendada"})
+                db.add_consulta(consulta)
+                dados = db.get_consultas(tp_order=0, is_agendadas=True)
+                return dados
+            else:
+                raise HTTPException(status_code=409, detail=HR_MED_ERR_MSG)
+        else:
+            raise HTTPException(status_code=422, detail=DT_ERR_MSG)
     else:
-        raise HTTPException(status_code=422, detail=ERR_MSG)
+        raise HTTPException(status_code=422, detail=FORM_ERR_MSG)
 
 
 @app.patch("/api/consultas/{id}")
@@ -334,7 +358,7 @@ def get_menu():
 
 
 # resetar o banco de dados
-@app.get("/reset", response_class=RedirectResponse)
+@app.delete("/reset", response_class=RedirectResponse, description=DEL_DB_MSG)
 def db_reset():
     import db_init
 
@@ -347,8 +371,25 @@ def is_valid(body: dict, qtd: int):
     return fields == qtd
 
 
+def is_valid_date(date: str):
+
+    dtt = dt.date.fromisoformat(date)
+    valid = dtt >= dt.date.today()
+
+    return valid
+
+
+def exists(consulta) -> bool:
+    id_medico = consulta["id_medico"]
+    dt_consulta = consulta["dt_consulta"]
+    hr_consulta = consulta["hr_consulta"]
+    dados = db.get_id_consulta(id_medico, dt_consulta, hr_consulta)
+
+    return len(dados) > 0
+
+
 def fragment(frag):
-    html = open(f"./static/fragments/{frag}.html", "r").readlines()
+    html = open(f"./static/fragments/{frag}.html", "r", encoding="utf-8").readlines()
     return "".join(html)
 
 

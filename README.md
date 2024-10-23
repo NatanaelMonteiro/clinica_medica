@@ -6,7 +6,17 @@ Proposta de controle de uma clínica médica, usando html (htmx) e css no fronte
 
 ## Pré-requisitos
 
-Python 3.x
+Python
+
+Sqlite
+
+Postgres
+
+HTML
+
+CSS
+
+JavaScript
 
 
 ## Como instalar no Windows
@@ -24,8 +34,17 @@ pip install -r requirements.txt
 
 uvicorn main:app --reload
 
+
 ## Acesso
 
 Usuário: diego@professor.com
 
 Senha: nota10
+
+
+## Povoar tabelas de agendamento e cancelamento de consulta
+
+Realizar dentro do app
+
+
+

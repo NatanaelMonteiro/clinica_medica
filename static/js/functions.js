@@ -3,7 +3,7 @@ document.addEventListener('htmx:responseError', evt => {
     showToast(error.detail);
 })
 
-let cadastros = document.getElementById('slot-lista');
+var cadastros = document.getElementById('slot-lista');
 
 if (cadastros != null) {
     cadastros.msg = 'Deseja mesmo excluir o cadastro de ';
@@ -33,7 +33,7 @@ if (agendadas != null) {
     })
 }
 
-let cancelamentos = document.getElementById('slot-cancelamento');
+var cancelamentos = document.getElementById('slot-cancelamento');
 
 if (cancelamentos != null) {
     cancelamentos.msg = 'Deseja mesmo cancelar o agendamento da consulta de ';
@@ -41,16 +41,20 @@ if (cancelamentos != null) {
 }
 
 function confirm(evt) {
+    console.log(evt.detail)
     if (evt.detail.question !== null) {
-        var msg = evt.currentTarget.msg;
-
         evt.preventDefault();
-        var msg = `${msg} ${(evt.detail.question).toUpperCase()}?`
+
+        const isDelete = (evt.detail.verb == "delete");
+        const msg = `${evt.currentTarget.msg} ${(evt.detail.question).toUpperCase()}?`
 
         Swal.fire({
+            customClass: { confirmButton: isDelete ? "bg-warning" : "" },
             buttonsStyling: false,
             showCancelButton: true,
             reverseButtons: true,
+            confirmButtonText: "SIM",
+            cancelButtonText: "NÃO",
             title: 'Confirme, por favor!',
             text: msg,
             showClass: { popup: 'animate__animated animate__fadeInUp animate__faster' },

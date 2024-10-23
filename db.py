@@ -195,6 +195,19 @@ def get_dados_consultas(tp_order=0, is_agendadas=False, id=None):
     return dados
 
 
+def get_id_consulta(id_medico, dt_consulta, hr_consulta):
+    sql = f"SELECT id FROM {TBL_CONSULTAS}"
+    sql += f" WHERE id_medico = {id_medico}"
+    sql += f" AND dt_consulta = '{dt_consulta}'"
+    sql += f" AND hr_consulta = '{hr_consulta}'"
+
+    cur.execute(sql)
+    rows = cur.fetchall()
+    dados = [dict(row) for row in rows]
+
+    return dados
+
+
 def add(table, dados: dict):
     if dados:
         values = [f"'{v}'" for _, v in dados.items()]

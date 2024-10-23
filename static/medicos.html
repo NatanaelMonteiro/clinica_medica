@@ -33,17 +33,17 @@
                 <label class="search">
                     <input type="search" name="search" placeholder="Informe parte do nome ou do CPF"
                         hx-post="/api/medicos/search" hx-trigger="input changed delay:500ms, search"
-                        hx-target="#slot_lista" mustache-array-template="medico-template">
+                        hx-target="#slot-lista" mustache-array-template="medico-template">
                     <!-- <input required type="date"> -->
                 </label>
                 <img id="spinner" class="htmx-indicator" width="80px" src="./icons/spinner.svg" />
             </div>
-            <div id="slot_lista" class="w-100" hx-get="/api/medicos" hx-vars="{'page':0}" hx-trigger="load delay 0.3s"
+            <div id="slot-lista" class="w-100" hx-get="/api/medicos" hx-vars="{'page':0}" hx-trigger="load delay 0.3s"
                 hx-swap="innerHTML" mustache-array-template="medico-template">
                 <!-- OS DADOS VÃO SER EXIBIDOS AQUI -->
             </div>
 
-            <section id="slot_dialogo">
+            <section id="slot-dialogo">
                 <!-- Os dialogos serao exibidos aqui -->
             </section>
 
@@ -72,11 +72,11 @@
                             <td class="icon">
                                 <div>
                                     <a title="Detalhar dados do médico" hx-trigger="click"
-                                        hx-get="/html/medicos/{{id}}/detalhe" hx-target="#slot_dialogo"
+                                        hx-get="/html/medicos/{{id}}/detalhe" hx-target="#slot-dialogo"
                                         hx-swap="innerHTML">
                                         <i class="material-symbols-outlined">clinical_notes</i>
                                     </a>
-                                    <a title="Editar dados do médico" hx-trigger="click" hx-target="#slot_dialogo"
+                                    <a title="Editar dados do médico" hx-trigger="click" hx-target="#slot-dialogo"
                                         hx-get="/html/medicos/{{id}}/edit" hx-vars="{'page': {{data.this_page}}}"
                                         hx-swap="innerHTML">
                                         <!-- <i class="fa fa-pencil"></i> -->
@@ -102,12 +102,12 @@
                                 <div class="pagination">
                                     <div class="nav-buttons">
                                         <!-- {{#data.pagination}} -->
-                                        <a hx-get="/api/medicos" hx-vars="{'page': 0}" hx-target="#slot_lista"
+                                        <a hx-get="/api/medicos" hx-vars="{'page': 0}" hx-target="#slot-lista"
                                             hx-swap="innerHTML" mustache-array-template="medico-template">
                                             <i class="material-symbols-outlined small-icon">first_page</i>
                                         </a>
                                         <a class="{{data.pagination.alias_first_page}}" hx-get="/api/medicos"
-                                            hx-vars="{'page':{{data.pagination.previous_page}}}" hx-target="#slot_lista"
+                                            hx-vars="{'page':{{data.pagination.previous_page}}}" hx-target="#slot-lista"
                                             hx-swap="innerHTML" mustache-array-template="medico-template">
                                             <i
                                                 class="{{data.pagination.alias_first_page}} material-symbols-outlined small-icon">
@@ -115,7 +115,7 @@
                                             </i>
                                         </a>
                                         <a class="{{data.pagination.alias_last_page}}" hx-get="/api/medicos"
-                                            hx-vars="{'page':{{data.pagination.next_page}}}" hx-target="#slot_lista"
+                                            hx-vars="{'page':{{data.pagination.next_page}}}" hx-target="#slot-lista"
                                             hx-swap="innerHTML" mustache-array-template="medico-template">
                                             <i
                                                 class="{{data.pagination.alias_last_page}} material-symbols-outlined small-icon">
@@ -123,14 +123,14 @@
                                             </i>
                                         </a>
                                         <a hx-get="/api/medicos" hx-vars="{'page':{{data.pagination.total_pages}}}"
-                                            hx-target="#slot_lista" hx-swap="innerHTML"
+                                            hx-target="#slot-lista" hx-swap="innerHTML"
                                             mustache-array-template="medico-template">
                                             <i class="material-symbols-outlined small-icon">last_page</i>
                                         </a>
                                         <!-- {{/data.pagination}} -->
                                     </div>
                                     <button class="w-3" hx-get="/html/medicos/new/add" hx-trigger="click"
-                                        hx-target="#slot_dialogo" hx-swap="innerHTML">
+                                        hx-target="#slot-dialogo" hx-swap="innerHTML">
                                         Cadastrar Médico
                                     </button>
                                 </div>
