@@ -174,6 +174,26 @@ async def medicos(params=Depends(get_params)):
     return dados
 
 
+@app.get("/api/medicos/ativos", response_class=JSONResponse)
+async def medicos_ativos(params=Depends(get_params)):
+    page = 0
+
+    if params:
+        key = "page"
+        page = int(params[key]) if key in params else 0
+        page = 0 if page < 0 else page
+
+    dados = db.get_medicos_ativos(page)
+    return dados
+
+
+@app.get("/api/medicos/horarios/{turno}", response_class=JSONResponse)
+async def turnos(turno: str):
+    from horarios import turnos
+
+    return turnos.get(turno.lower())
+
+
 @app.get("/api/medicos/{id}", response_class=JSONResponse)
 async def medico(id: int):
     return db.get_medico(id)

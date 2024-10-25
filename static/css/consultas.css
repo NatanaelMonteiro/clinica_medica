@@ -66,7 +66,7 @@ td.tw-1 {
 td.tw-2 {
     width: 25%;
 }
-
+/* 
 .agendada {
     color: var(--success)
 }
@@ -78,7 +78,7 @@ td.tw-2 {
 .cancelada,
 .cancelada a {
     color: var(--warning)
-}
+} */
 
 .medicos {
     align-items: center;

@@ -66,6 +66,13 @@ def get_medicos_paged(len_page, page=0):
     return dados
 
 
+def get_medicos_ativos(page=0):
+    len_page = 3
+    dados = get_dados_paged(TBL_MEDICOS, len_page, page, status="ativo")
+    dados.update(pagination(TBL_MEDICOS, len_page, page))
+    return dados
+
+
 def get_medico_position(nome, len_page):
     page = get_page(TBL_MEDICOS, nome, len_page)
     dados = get_medicos_paged(len_page, page)
@@ -142,8 +149,10 @@ def get_dados(tbl, id=None):
     return dados
 
 
-def get_dados_paged(tbl, len_page=0, page=-1):
-    sql = f"SELECT * FROM {tbl} ORDER BY nome"
+def get_dados_paged(tbl, len_page=0, page=-1, status=None):
+    sql = f"SELECT * FROM {tbl}"
+    sql += f" WHERE status = '{status}'" if status else ""
+    sql += f" ORDER BY nome"
     sql += f" LIMIT {len_page} OFFSET {page * len_page}" if page >= 0 else ""
     cur.execute(sql)
     rows = cur.fetchall()

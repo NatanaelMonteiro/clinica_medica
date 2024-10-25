@@ -6,7 +6,7 @@ Proposta de controle de uma clínica médica, usando html (htmx) e css no fronte
 
 ## Pré-requisitos
 
-Python 3.x
+Python
 
 Sqlite
 
@@ -47,17 +47,4 @@ Senha: nota10
 Realizar dentro do app
 
 
-## Observação
-
-No linux, se der erro na instalação da lib psycopg2, provavelmente falta instalar as de build. Instlar com os comandos:
-
-sudo apt install libpq-dev python3.x-dev (onde x depende da versão python3 usado por você)
-
-sudo apt install build-essential.
-
-pip install -r requirements.txt
-
-python db_init.py
-
-uvicorn main:app
 
