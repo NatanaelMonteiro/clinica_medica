@@ -9,8 +9,19 @@ TBL_USUARIOS = "usuarios"
 con, cur = connection.get()
 
 
-def get_usuarios():
-    return get_dados(TBL_USUARIOS)
+def get_usuarios(tbl, dados):
+    if not dados:
+        return {}
+    values = [v for _, v in dados.items()]
+    usuario = values[0]
+
+    sql = f"SELECT * FROM {tbl}"
+    sql += f" WHERE usuario='{usuario}'"
+
+    cur.execute(sql)
+    rows = cur.fetchall()
+    dados = [dict(row) for row in rows]
+    return dados
 
 
 def is_usuario(body):
@@ -108,8 +119,8 @@ def add_consulta(new_consulta):
     add(TBL_CONSULTAS, new_consulta)
 
 
-def close_consulta(id):
-    set_status(TBL_CONSULTAS, "concluída", id)
+def set_status_consulta(id, status):
+    set_status(TBL_CONSULTAS, status, id)
 
 
 def del_consulta(id):
@@ -194,7 +205,11 @@ def get_dados_consultas(tp_order=0, is_agendadas=False, id=None):
     sql += " INNER JOIN medicos AS m ON (m.id = c.id_medico)"
     sql += " INNER JOIN pacientes AS p ON (p.id = c.id_paciente)"
     sql += f" WHERE id={id}" if id else ""
-    sql += f" AND c.status='agendada'" if is_agendadas else ""
+    sql += (
+        f" AND c.status IN ('agendada', 'confirmada', 'atendimento')"
+        if is_agendadas
+        else ""
+    )
     sql += f" ORDER BY {ORDER[tp_order]}"
 
     cur.execute(sql)

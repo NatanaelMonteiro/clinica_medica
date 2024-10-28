@@ -21,7 +21,7 @@ if (cadastros != null) {
 var agendadas = document.getElementById('slot-agendadas');
 
 if (agendadas != null) {
-    agendadas.msg = 'Deseja registrar o encerramento da consulta de ';
+    agendadas.msg = 'Deseja alterar a situação da consulta do paciente ';
     agendadas.addEventListener("htmx:confirm", confirm, false);
 
     agendadas.addEventListener('htmx:beforeSwap', evt => {

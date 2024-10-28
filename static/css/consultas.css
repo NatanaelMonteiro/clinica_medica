@@ -66,6 +66,7 @@ td.tw-1 {
 td.tw-2 {
     width: 25%;
 }
+
 /* 
 .agendada {
     color: var(--success)
@@ -79,6 +80,12 @@ td.tw-2 {
 .cancelada a {
     color: var(--warning)
 } */
+
+.status .material-symbols-outlined {
+    padding-left: .3em;
+    font-size: 1.7em;
+    font-weight: 800;
+}
 
 .medicos {
     align-items: center;
